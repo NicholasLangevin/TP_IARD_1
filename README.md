@@ -2,5 +2,5 @@
 ## Mathématique actuarielles IARD 1
 ### Hiver 2018
 
-Nicholas Langevin
+Nicholas Langevin  
 Alexandre turquotte
