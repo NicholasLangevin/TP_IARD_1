@@ -1,0 +1,64 @@
+---
+title: "TP1 ~ Mathématique actuarielles IARD I"
+author: "Nicholas Langevin, Alexandre Turquotte"
+date: '2018-10-05'
+output: pdf_document
+---
+a) Le coéficient d’asymétrie estimé:
+```{R}
+n <- 100
+data <-  rexp(n, 1)
+ 
+
+mu <- mean(data)
+sd <- sd(data)
+mu_2 <- mean(data^2)
+mu_3 <- mean(data^3)
+cof_asymetrie <- (mu_3 - 3 * mu_2 * mu + 2 * mu^3)/sd^3
+
+
+
+hist(data);curve(dexp(x,1) * n, add = TRUE)
+```
+
+c)Coeficient d'asymétrie théorique
+Les moments de la loi expodentiel sont donnés par:
+\begin{align*}
+E[x]   &= \frac{1}{\theta} \\
+E[x^2] &= var(x) + E^2[x] \\
+       &= \frac{1}{\theta^2} + \left(\frac{1}{\theta}\right)^2 \\
+       &= \frac{2}{\theta^2}
+E[x^3] &= M_x^{(3)}(0) \\
+       &= \frac{d^3}{dt^3} \left(\frac{\theta}{\theta - t} \right) \\
+       &= \frac{d^2}{dt^2} \left(\frac{\theta}{(\theta - t)^2}\right)
+\end{align*}
+\begin{align*}
+\gamma &= E \left[ \frac{(x - \mu)^3}{\sigma^3} \right] \\
+       &= \frac{1}{\sigma^3} E\left[x^3 - 3x^2\mu + 3x\mu2
+          \mu^3 \right] \\
+       &= \frac{1}{\sigma^3} \left( E[x^3] + 3\mu E[x^2] +
+           3\mu^2 E[x] + \mu^3 \right) 
+\end{align*}
+
+# Question 2
+```{R}
+rep_emp <- function(t){
+    sum(data * (data <= t)) / n
+}
+plot_rep <- sapply(sort(data), rep_emp)
+plot(plot_rep)
+plot(ecdf(data))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
