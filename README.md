@@ -1,4 +1,4 @@
-# Travail pratique 
+# Travails pratiques
 ## Mathématique actuarielles IARD 1
 ### Hiver 2018
 
