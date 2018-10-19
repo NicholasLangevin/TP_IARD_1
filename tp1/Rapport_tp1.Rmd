@@ -1,28 +1,53 @@
 ---
-title: "TP1 ~ Mathématique actuarielles IARD I"
-author: "Nicholas Langevin, Alexandre Turquotte"
-date: '2018-10-05'
+title: "Mathématique actuarielles IARD I  \n Travail pratique 1"
+author: "Nicholas Langevin  \n Alexandre Turquotte"
+date: '2018-10-26'
 output: pdf_document
 ---
-a) Le coéficient d’asymétrie estimé:
-```{R}
-n <- 100
-data <-  rexp(n, 1)
- 
 
-mu <- mean(data)
-sd <- sd(data)
-mu_2 <- mean(data^2)
-mu_3 <- mean(data^3)
-cof_asymetrie <- (mu_3 - 3 * mu_2 * mu + 2 * mu^3)/sd^3
-
-
-
-hist(data);curve(dexp(x,1) * n, add = TRUE)
-```
 \newpage
+# Question 1
+### a) Estimation du coéficient d'asymétrie
+ 
+```{R}
+data <-  rexp(100, 1)
 
-### c)Coeficient d'asymétrie théorique
+coef_asymetrie <- function(x){
+    mu <- mean(x)
+    sd <- sd(x)
+    mean((x - mu)^3) / sd^3 
+}
+
+estimateur_coef_asymetrie <- coef_asymetrie(data)
+
+hist(data, probability = TRUE,
+     main = "Histograme des données",
+     ylab = "Densité",
+     xlab = "Données");curve(dexp(x,1), add = TRUE)
+```
+
+
+On apperçoit à l'aide de l'histograme que la masse de densité est concentré à gauche et la queue de la distribution va vers la droite. On s'attend donc à avoir un coéficient d'asymétrie possitif. En effet, le coéficient d'asymétrie estimé empiriquement est de `r estimateur_coef_asymetrie`. 
+
+\newpage
+### b) Interval de confiance pour le coéficient d'asymétrie
+```{R}
+teta <- mean(data)
+echantillion <- lapply(1:50, function(i) rexp(50, teta))
+coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
+
+mu_y <- mean(coef_asymetrie_simul)
+variance_coef_asymetrie <- sum((coef_asymetrie_simul - mu_y)^2)
+
+IC_y <- cbind(estimateur_coef_asymetrie - qnorm(0.975) * sqrt(variance_coef_asymetrie),
+              estimateur_coef_asymetrie + qnorm(0.975) * sqrt(variance_coef_asymetrie))
+```
+Avec la méthode 'bootstrap', on obtient une variances estimé pour le coéficient d'asymétrie de `r variance_coef_asymetrie`, ce qui nous permet d'obtenir l'interval de confiance suivant:
+\begin{align*}
+[`r IC_y`]
+\end{align*}
+
+### c) Coeficient d'asymétrie théorique
 Les moments de la loi expodentiel sont donnés par:
 
 \begin{minipage}{5cm}
@@ -65,11 +90,6 @@ Ainsi, le coeficient d'asymétrie théorique est donnée par
 
 # Question 2
 ```{R}
-rep_emp <- function(t){
-    sum(data * (data <= t)) / n
-}
-plot_rep <- sapply(sort(data), rep_emp)
-plot(plot_rep)
 plot(ecdf(data))
 ```
 
