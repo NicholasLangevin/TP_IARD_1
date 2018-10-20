@@ -201,13 +201,68 @@ L'espérance limitée théorique de la loi exponentielle de moyenne 1 est égale
 
 
 \newpage
+# Question 3
+### a) Estimation de la fonction de survie avec Kaplan-Meier
+```{R}
+Temps <- c(30, 40, 57, 65, 65, 84, 90, 92, 98, 101) 
+Cens <- c(1, 1, 1, 1, 0, 1, 1, 0, 1, 1)
+
+donnees <- data.frame(Temps, Cens)
+
+yi <- unique(donnees[which(donnees[,2] != 0),1])
+i <- 1:length(yi)
+Si <- rep(1,length(yi))
+ri <- c(10,9,8,7,5,4,2,1)
+
+Estimateur_Kaplan_Meier <- cumprod(1-Si/ri)
+jeu_de_donnees <- data.frame(i, yi, Si, ri, "Kaplan-Meier" = cumprod(1-Si/ri))
+
+```
+\begin{align*}
+    \hat{S_n(t)}
+    &=\prod_{i=1}^t(1-\frac{S_i}{r_i}) \\
+    \hat{Var(\hat{S_n(t))}}
+    &=(\hat{S_n(t)})^2\sum_{i=1}^t\frac{S_i}{r_i(S_i-r_i)}
+\end{align*}
+
+### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour S(50)
+```{R}
+plot(yi, Estimateur_Kaplan_Meier,
+     main = "Valeur de la fonction de survie estimée à l'aide de l'estimateur 
+Kaplan-Meier en fonction des temps de décès ou de retraits",
+     ylab = "Estimateur Kaplan-Meier",
+     xlab = "Temps",
+     type = "b")
+
+formule_Greenwood <- Estimateur_Kaplan_Meier^2 * cumsum(Si/ri/(ri-Si))
+
+# Estimer S(50)
+x <- 50
+ci <- 40
+cj <- 57
+alpha <- (cj-x)/(cj-ci)
+Sn_50 <- 1 - (alpha)*(1 - Estimateur_Kaplan_Meier[2]) - (1-alpha)*(1 - Estimateur_Kaplan_Meier[3])
+
+IC_KM <- cbind(Estimateur_Kaplan_Meier - qnorm(0.975) * sqrt(formule_Greenwood),
+              Estimateur_Kaplan_Meier + qnorm(0.975) * sqrt(formule_Greenwood))
+```
+
+### c) Intervalle de confiance pour S(50) avec la transformation log
+```{R}
+u <- exp(qnorm(0.975) * sqrt(formule_Greenwood) / Estimateur_Kaplan_Meier / log(Estimateur_Kaplan_Meier))
+IC_log_KM <- cbind(Estimateur_Kaplan_Meier^(1/u),
+              Estimateur_Kaplan_Meier^u)
+```
+
+L'intervalle de confiance devrait être plus petit et précis dans le cas de la transformation log.
+
+
+\newpage
 # Annexe
 ### Échantillon de 100 données simulées à partir d'une loi exponentielle ($\theta =1$) :
 ```{R eval = TRUE, echo = FALSE}
 data
 ```
-
-
 
 
 
