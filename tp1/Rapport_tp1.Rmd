@@ -1,13 +1,13 @@
 ---
-title: "Mathématique actuarielles IARD I  \n Travail pratique 1"
-author: "Nicholas Langevin  \n Alexandre Turquotte"
+title: "Mathématiques actuarielles IARD I  \n Travail pratique 1"
+author: "Nicholas Langevin  \n Alexandre Turcotte"
 date: '2018-10-26'
 output: pdf_document
 ---
 
 \newpage
 # Question 1
-### a) Estimation du coéficient d'asymétrie
+### a) Estimation du coefficient d'asymétrie
  
 ```{R}
 data <-  rexp(100, 1)
@@ -21,40 +21,48 @@ coef_asymetrie <- function(x){
 estimateur_coef_asymetrie <- coef_asymetrie(data)
 
 hist(data, probability = TRUE,
-     main = "Histograme des données",
+     main = "Histogramme des données",
      ylab = "Densité",
      xlab = "Données");curve(dexp(x,1), add = TRUE)
 ```
 
+À partir de l'histogramme, il est possible de noter que la distribution est plus dense et concentrée à gauche et que la queue de la distribution tend vers la droite. Par conséquent, la distribution n'est pas symétrique et le coefficient d'asymétrie devrait être positif. Cela concorde effectivement avec le coefficient d'asymétrie estimé empiriquement puisqu'il est de `r estimateur_coef_asymetrie` conparativement à celui de la loi normale qui est égal à 0. La loi normale a une distribution symétrique et comme le coefficient d'asymétrie des valeurs simulées est plus grand que celui de la loi normale, cela implique que la distribution est asymétrique vers la droite. Donc, elle possède une queue de distribution à droite comme il est possible d'observer sur l'histogramme précédent.  
 
-On apperçoit à l'aide de l'histograme que la masse de densité est concentré à gauche et la queue de la distribution va vers la droite. On s'attend donc à avoir un coéficient d'asymétrie possitif. En effet, le coéficient d'asymétrie estimé empiriquement est de `r estimateur_coef_asymetrie`. 
 
 \newpage
-### b) Interval de confiance pour le coéficient d'asymétrie
+
+### b) Intervalle de confiance pour le coefficient d'asymétrie
+
 ```{R}
 teta <- mean(data)
-echantillion <- lapply(1:50, function(i) rexp(50, teta))
+echantillion <- lapply(1:50, function(i) rexp(100, teta))
 coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
 
-mu_y <- mean(coef_asymetrie_simul)
-variance_coef_asymetrie <- sum((coef_asymetrie_simul - mu_y)^2)
+moyenne_coef_asymetrie <- mean(coef_asymetrie_simul)
+variance_coef_asymetrie <- sum((coef_asymetrie_simul - moyenne_coef_asymetrie)^2) / (length(coef_asymetrie_simul)-1)
+variance_coef_asymetrie_modifie <- var(coef_asymetrie_simul)
 
-IC_y <- cbind(estimateur_coef_asymetrie - qnorm(0.975) * sqrt(variance_coef_asymetrie),
+IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie - qnorm(0.975) * sqrt(variance_coef_asymetrie),
               estimateur_coef_asymetrie + qnorm(0.975) * sqrt(variance_coef_asymetrie))
 ```
-Avec la méthode 'bootstrap', on obtient une variances estimé pour le coéficient d'asymétrie de `r variance_coef_asymetrie`, ce qui nous permet d'obtenir l'interval de confiance suivant:
+
+Avec la méthode de ré-échantillonnage, la variance estimée pour le coefficient d'asymétrie est de `r variance_coef_asymetrie`. À partir de l'estimateur ponctuel du coefficient d'asymétrie calculé en a) et de cette variance estimée, il est possible d'obtenir l'intervalle de confiance suivant pour le coefficient d'asymétrie : 
+
 \begin{align*}
-[`r IC_y`]
+[`r IC_coef_asymetrie`]
 \end{align*}
 
-### c) Coeficient d'asymétrie théorique
-Les moments de la loi expodentiel sont donnés par:
+
+\newpage
+
+### c) Coefficient d'asymétrie théorique
+Les moments de la loi exponentielle sont donnés par:
 
 \begin{minipage}{5cm}
     \begin{align*}
         E[x]   &= \left. M_x^{'}(t) \right|_{t=0} \\
        &= \frac{d}{dt} \left.\left( \frac{\theta}{\theta - t} \right)\right|_{t=0} \\
-       &= \left.\left( \frac{\theta}{(\theta - t)^B} \right)\right|_{t=0} \\
+       &= \left.\left( \frac{\theta}{(\theta - t)^2} \right)\right|_{t=0} \\
        &= \frac{1}{\theta}
     \end{align*}
 \end{minipage}
@@ -62,14 +70,14 @@ Les moments de la loi expodentiel sont donnés par:
     \begin{align*}
         E[x^2] &= \left. M_x^{''}(t) \right|_{t=0} \\
        &= \frac{d}{dt} \left.\left( \frac{\theta}{(\theta - t)^2} \right)\right|_{t=0} \\
-       &= \left.\left( \frac{-2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
+       &= \left.\left( \frac{2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
        &= \frac{2}{\theta^2}
     \end{align*}
 \end{minipage}
 \begin{minipage}{5cm}
     \begin{align*}
         E[x^3] &= \left. M_x^{'''}(t) \right|_{t=0} \\
-       &= \frac{d}{dt} \left.\left( \frac{-2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
+       &= \frac{d}{dt} \left.\left( \frac{2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
        &= \left.\left( \frac{6 \theta}{(\theta - t)^4} \right)\right|_{t=0} \\
        &= \frac{6}{\theta^3}
     \end{align*}
@@ -78,7 +86,7 @@ Les moments de la loi expodentiel sont donnés par:
 Ainsi, le coeficient d'asymétrie théorique est donnée par
 \begin{align*}
     \gamma 
-    &= E\left[ \frac{(x - \mu)^3}{\sigma^3} \right] \\
+    &= \frac{E\left[ (x - \mu)^3 \right]}{\sigma^3} \\
     &= \frac{1}{\sigma^3} \left( E[x^3 - 3x^2\mu + 3x\mu^2 - \mu^3] \right) \\
     &= \frac{1}{\sigma^3} \left( E[x^3] - 3\mu E[x^2] + 3\mu^2E[x] - \mu^3  \right) \\
     &= \theta^3 \left[ \frac{6}{\theta^3} - 3 \left(\frac{1}{\theta}\right) \left(\frac{2}{\theta^2}\right) + 3 \left(\frac{1}{\theta}\right)^3 - \left(\frac{1}{\theta}\right)^3 \right] \\
@@ -87,15 +95,117 @@ Ainsi, le coeficient d'asymétrie théorique est donnée par
     &= 2
 \end{align*}
 
+Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est de 2. Cela s'avère compatible avec l'estimé ponctuel obtenu en a) puisque celui-ci est de `r estimateur_coef_asymetrie`, ce qui est assez près de 2. Pour ce qui est de l'intervalle de confiance obtenu en b), il est possible d'observer que la valeur théorique est incluse dans cette intervalle qui est `r IC_coef_asymetrie`. Par conséquent, les estimateurs obtenus sont compatibles avec la valeur théorique. Toutefois, ceux-ci ne sont pas très précis en raison du nombre d'observations qui est assez faible, soit 100 observations. En augmentant le nombre d'observation, l'intervalle de confiance serait plus petit et l'estimateur serait plus précis.
+
+
+\newpage
 
 # Question 2
+### a) Estimation de $E[min(X,u)]$
+
+La fonction quantile théorique d'une loi exponentielle ($\theta =1$) est déterminée de cette façon :
+\begin{align*}
+    X 
+    &\sim Exp(\theta = 1) \\
+    F(x) 
+    &= 1 - e^{-\frac{x}{\theta}} \\
+    &= 1 - e^{-x} \\
+    k 
+    &= 1 - e^{-x} \\
+    1 - k 
+    &= e^{-x} \\
+    F_x^{-1}(k) 
+    &= x = -ln(1-k) \\
+\end{align*}
+
 ```{R}
-plot(ecdf(data))
+k <- c(0.25, 0.35, 0.5, 0.6, 0.75, 0.85)
+fonction_percentile <- function(x) -log(1-x)
+limite_u <- sapply(k, function(i) fonction_percentile(i))
+
+Estimateur_Esperance_limite <- sapply(1:length(limite_u), function(u) mean(sapply(1:100, function(i) min(data[i], limite_u[u]))))   
 ```
 
+```{R eval = TRUE, echo = FALSE}
+resultats <- data.frame("Percentile" = k, "Limite u" = limite_u, "Espérance limitée" = Estimateur_Esperance_limite)
+resultats
+```
+
+$E[min(X,u)]$ estimé est une fonction croissante en fonction du $u$. En effet, le tableau présente une augmentation de la valeur de l'espérance lorsque $u$ augmente. Cela s'avère tout à fait logique puisque lorsque $u$ est petit, la fonction $min(X,u)$ prend davantage en considération les valeurs de $u$. Par conséquent, les valeurs supérieures de $x$ sont réduites, ce qui réduit donc la moyenne, car elle ne tient compte que des valeurs inférieures ou égales à $u$. Alors, si $u$ augmente, l'espérance prendra en compte des valeurs plus grande de $x$, car $u$ aura augmenté.
 
 
+\newpage
 
+### b) Intervalle de confiance pour $E[min(X,u)]$
+
+```{R}
+teta <- mean(data)
+echantillion <- lapply(1:50, function(i) rexp(100, teta))
+Esperance_limite_simul <- sapply(c(3,5), function(u) 
+                                sapply(1:50, function(j) 
+                                    mean(sapply(1:100, function(i) 
+                                        min(echantillion[[j]][i], limite_u[u])))))
+
+moyenne_Esperance_limite_simul <- sapply(1:2, function(i) mean(Esperance_limite_simul[,i]))
+variance_Esperance_limite_simul <- sapply(1:2, function(i) sum((Esperance_limite_simul[,i] - moyenne_Esperance_limite_simul[i])^2) / (length(Esperance_limite_simul[,i])-1))
+variance_Esperance_limite_simul_modifie <- sapply(1:2, function(i) var(Esperance_limite_simul[,i]))
+
+resultats_b <- data.frame("Percentile" = c(k[3], k[5]), "Limite u" = c(limite_u[3], limite_u[5]), "Espérance limité" = moyenne_Esperance_limite_simul, "Variance" = variance_Esperance_limite_simul_modifie)
+
+Est_Esperance_limite <- rep(0,2)
+Est_Esperance_limite[1] <- Estimateur_Esperance_limite[3]
+Est_Esperance_limite[2] <- Estimateur_Esperance_limite[5]
+
+IC_Esperance_limite_simul <- lapply(1:2, function(i) 
+                                cbind(Est_Esperance_limite[i] - qnorm(0.975) * sqrt(variance_Esperance_limite_simul[i]),
+                                    Est_Esperance_limite[i] + qnorm(0.975) * sqrt(variance_Esperance_limite_simul[i])))
+```
+Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{-1}(0.5))]$ est de $???????$, alors que celle pour $E[min(X,F^{-1}(0.75))]$ est de $???????$. À partir des estimateurs de $E[min(X,u)]$ calculés en a) pour $u = F^{-1}(0.5)$ et $u = F^{-1}(0.75)$ et de ces variances estimées, il est possible d'obtenir les intervalles de confiance suivants : 
+
+\begin{align*}
+[`r IC_Esperance_limite_simul[[1]]`] ,\ pour \ u = F^{-1}(0.5)
+\end{align*}
+\begin{align*}
+[`r IC_Esperance_limite_simul[[2]]`] ,\ pour \ u = F^{-1}(0.75)
+\end{align*}
+
+
+\newpage
+
+### c) $E[min(X,u)]$ théorique
+\begin{align*}
+    X 
+    &\sim Exp(\theta = 1) \\
+    S(x) 
+    &= e^{-x}, \ où \ x>0 \\
+    u
+    &=F_x^{-1}(k) = -ln(1-k)\\
+    E\left[ min(X,u) \right]
+    &=E\left[ X \wedge u \right] \\
+    &=\int_{0}^{u} x f_x(x) dx + \int_{0}^{u} u f_x(x) dx \\
+    &=\int_{0}^{u} S_x(x) dx \\
+    &=\int_{0}^{u} e^{-x} dx  \\
+    &=[-e^{-x}]_{0}^{u} \\
+    &=1 - e^{-u} \\
+    &=1 - e^{-(-ln(1-k))} \\
+    &=1 - (1-k) \\
+    &= k
+\end{align*}
+Ainsi, les valeurs théoriques des espérances limitées sont :
+\begin{align*}
+    E\left[min(X,F_x^{-1}(0.5))\right] = 0.5 \\
+    E\left[min(X,F_x^{-1}(0.75))\right] = 0.75
+\end{align*}
+
+L'espérance limitée théorique de la loi exponentielle de moyenne 1 est égale à son quantile. Par conséquent,  $E[min(X,F^{-1}(0.5))] = 0.5$ et  $E[min(X,F^{-1}(0.75))] = 0.75$. Cela s'avère compatible avec les valeurs estimées obtenues en a) puisque ceux-ci sont de `r Estimateur_Esperance_limite[3]` et `r Estimateur_Esperance_limite[5]`, ce qui est assez près des valeurs théoriques. Pour ce qui est des intervalles de confiance obtenu en b), il est possible d'observer que les valeurs théoriques sont incluses dans chacun des intervalles respectifs qui sont [`r IC_Esperance_limite_simul[[1]]`], pour le premier, et [`r IC_Esperance_limite_simul[[2]]`], pour le second. Par conséquent, les estimateurs obtenus sont compatibles avec les valeurs théoriques. Il est donc possible d'affirmer que ces estimateurs non-paramétriques sont assez performants puisque les valeurs obtenues sont très près de la valeur théorique.
+
+
+\newpage
+# Annexe
+### Échantillon de 100 données simulées à partir d'une loi exponentielle ($\theta =1$) :
+```{R eval = TRUE, echo = FALSE}
+data
+```
 
 
 
