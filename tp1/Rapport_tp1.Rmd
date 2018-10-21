@@ -9,7 +9,7 @@ output: pdf_document
 # Question 1
 ### a) Estimation du coefficient d'asymétrie
  
-```{R}
+```{R }
 data <-  rexp(100, 1)
 
 coef_asymetrie <- function(x){
@@ -26,9 +26,7 @@ hist(data, probability = TRUE,
      xlab = "Données");curve(dexp(x,1), add = TRUE)
 ```
 
-À partir de l'histogramme, il est possible de noter que la distribution est plus dense et concentrée à gauche et que la queue de la distribution tend vers la droite. Par conséquent, la distribution n'est pas symétrique et le coefficient d'asymétrie devrait être positif. Cela concorde effectivement avec le coefficient d'asymétrie estimé empiriquement puisqu'il est de `r estimateur_coef_asymetrie` conparativement à celui de la loi normale qui est égal à 0. La loi normale a une distribution symétrique et comme le coefficient d'asymétrie des valeurs simulées est plus grand que celui de la loi normale, cela implique que la distribution est asymétrique vers la droite. Donc, elle possède une queue de distribution à droite comme il est possible d'observer sur l'histogramme précédent.  
-
-
+À partir de l'histogramme, il est possible de noter que la distribution est plus dense et concentrée à gauche et que la queue de la distribution tend vers la droite. Par conséquent, la distribution n'est pas symétrique et le coefficient d'asymétrie devrait être positif. Cela concorde effectivement avec le coefficient d'asymétrie estimé empiriquement puisqu'il est de `r estimateur_coef_asymetrie` comparativement à celui de la loi normale qui est égal à 0. La loi normale a une distribution symétrique et comme le coefficient d'asymétrie des valeurs simulées est plus grand que celui de la loi normale, cela implique que la distribution est asymétrique vers la droite. Donc, elle possède une queue de distribution à droite comme il est possible d'observer sur l'histogramme précédent.  
 \newpage
 
 ### b) Intervalle de confiance pour le coefficient d'asymétrie
@@ -36,14 +34,15 @@ hist(data, probability = TRUE,
 ```{R}
 teta <- mean(data)
 echantillion <- lapply(1:50, function(i) rexp(100, teta))
-coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
+coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]))
 
 moyenne_coef_asymetrie <- mean(coef_asymetrie_simul)
-variance_coef_asymetrie <- sum((coef_asymetrie_simul - moyenne_coef_asymetrie)^2) / (length(coef_asymetrie_simul)-1)
-variance_coef_asymetrie_modifie <- var(coef_asymetrie_simul)
+variance_coef_asymetrie <- var(coef_asymetrie_simul)
 
-IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie - qnorm(0.975) * sqrt(variance_coef_asymetrie),
-              estimateur_coef_asymetrie + qnorm(0.975) * sqrt(variance_coef_asymetrie))
+IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie - 
+                               qnorm(0.975) * sqrt(variance_coef_asymetrie),
+                           estimateur_coef_asymetrie + 
+                               qnorm(0.975) * sqrt(variance_coef_asymetrie))
 ```
 
 Avec la méthode de ré-échantillonnage, la variance estimée pour le coefficient d'asymétrie est de `r variance_coef_asymetrie`. À partir de l'estimateur ponctuel du coefficient d'asymétrie calculé en a) et de cette variance estimée, il est possible d'obtenir l'intervalle de confiance suivant pour le coefficient d'asymétrie : 
@@ -52,8 +51,6 @@ Avec la méthode de ré-échantillonnage, la variance estimée pour le coefficie
 [`r IC_coef_asymetrie`]
 \end{align*}
 
-
-\newpage
 
 ### c) Coefficient d'asymétrie théorique
 Les moments de la loi exponentielle sont donnés par:
@@ -95,10 +92,10 @@ Ainsi, le coeficient d'asymétrie théorique est donnée par
     &= 2
 \end{align*}
 
+\newpage
 Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est de 2. Cela s'avère compatible avec l'estimé ponctuel obtenu en a) puisque celui-ci est de `r estimateur_coef_asymetrie`, ce qui est assez près de 2. Pour ce qui est de l'intervalle de confiance obtenu en b), il est possible d'observer que la valeur théorique est incluse dans cette intervalle qui est `r IC_coef_asymetrie`. Par conséquent, les estimateurs obtenus sont compatibles avec la valeur théorique. Toutefois, ceux-ci ne sont pas très précis en raison du nombre d'observations qui est assez faible, soit 100 observations. En augmentant le nombre d'observation, l'intervalle de confiance serait plus petit et l'estimateur serait plus précis.
 
 
-\newpage
 
 # Question 2
 ### a) Estimation de $E[min(X,u)]$
@@ -123,12 +120,14 @@ k <- c(0.25, 0.35, 0.5, 0.6, 0.75, 0.85)
 fonction_percentile <- function(x) -log(1-x)
 limite_u <- sapply(k, function(i) fonction_percentile(i))
 
-Estimateur_Esperance_limite <- sapply(1:length(limite_u), function(u) mean(sapply(1:100, function(i) min(data[i], limite_u[u]))))   
+Estimateur_Esperance_limite <- sapply(1:length(limite_u), function(u)
+    mean(sapply(1:100, function(i) min(data[i], limite_u[u]))))   
 ```
 
-```{R eval = TRUE, echo = FALSE}
+
+```{R echo=FALSE}
 resultats <- data.frame("Percentile" = k, "Limite u" = limite_u, "Espérance limitée" = Estimateur_Esperance_limite)
-resultats
+knitr::kable(resultats, align = c('c','c','c'), col.names = c('Percentile', 'Limite u', 'Espérance limitée'), caption = "Estimation de l'espérance limitée")
 ```
 
 $E[min(X,u)]$ estimé est une fonction croissante en fonction du $u$. En effet, le tableau présente une augmentation de la valeur de l'espérance lorsque $u$ augmente. Cela s'avère tout à fait logique puisque lorsque $u$ est petit, la fonction $min(X,u)$ prend davantage en considération les valeurs de $u$. Par conséquent, les valeurs supérieures de $x$ sont réduites, ce qui réduit donc la moyenne, car elle ne tient compte que des valeurs inférieures ou égales à $u$. Alors, si $u$ augmente, l'espérance prendra en compte des valeurs plus grande de $x$, car $u$ aura augmenté.
@@ -185,7 +184,7 @@ Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{
     &=\int_{0}^{u} x f_x(x) dx + \int_{0}^{u} u f_x(x) dx \\
     &=\int_{0}^{u} S_x(x) dx \\
     &=\int_{0}^{u} e^{-x} dx  \\
-    &=[-e^{-x}]_{0}^{u} \\
+    &=\left[-e^{-x}\right|_0^u \\
     &=1 - e^{-u} \\
     &=1 - e^{-(-ln(1-k))} \\
     &=1 - (1-k) \\
@@ -219,10 +218,10 @@ jeu_de_donnees <- data.frame(i, yi, Si, ri, "Kaplan-Meier" = cumprod(1-Si/ri))
 
 ```
 \begin{align*}
-    \hat{S_n(t)}
+    \hat{S}_n(t)
     &=\prod_{i=1}^t(1-\frac{S_i}{r_i}) \\
-    \hat{Var(\hat{S_n(t))}}
-    &=(\hat{S_n(t)})^2\sum_{i=1}^t\frac{S_i}{r_i(S_i-r_i)}
+    \widehat{Var}(\hat{S}_n(t))
+    &=[\hat{S}_n(t)]^2\sum_{i=1}^t\frac{S_i}{r_i(S_i-r_i)}
 \end{align*}
 
 ### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour S(50)
@@ -263,6 +262,7 @@ L'intervalle de confiance devrait être plus petit et précis dans le cas de la 
 ```{R eval = TRUE, echo = FALSE}
 data
 ```
+
 
 
 
