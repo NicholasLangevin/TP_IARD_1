@@ -9,7 +9,7 @@ output: pdf_document
 \begin{center}
     \vspace{5\baselineskip}
     Nicholas Langevin \\
-    (XXX XXX XXX) \\
+    (111 184 631) \\
     \vspace{2\baselineskip}
     Alexandre Turcotte \\
     (111 172 613) \\
