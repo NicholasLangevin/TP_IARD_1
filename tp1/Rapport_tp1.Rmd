@@ -253,7 +253,7 @@ xtable(tableau2, caption = "Données permettant de trouver l'estimateur Kaplan-M
 La table précèdente présente toutes les données utiles permettant de déterminer l'estimateur Kaplan-Meier. Par conséquent, il est possible de calculer cet estimateur à partir de sa définition :
 
 \begin{align*}
-    \hat{S}_n(t) = \left\{
+    \hat{S}_n(t) &= \left\{
         \begin{array}{lll}
             1, \ 0\leqslant t<y,\\
             \\
@@ -261,10 +261,8 @@ La table précèdente présente toutes les données utiles permettant de déterm
             \\
             \prod\limits_{i=1}^{k}(\frac{r_i-S_i}{r_i}) , \ t>y_k
         \end{array}
-    \right.
-\end{align*}
-\begin{align*}
-    \hat{S}_n(i) = \left\{
+    \right. \\
+    \hat{S}_n(i) &= \left\{
         \begin{array}{ll}
             1                   &, 0\leqslant i<1,\\
             `r Estimateur_KM[1]`&, 1\leqslant i<2,\\
@@ -343,10 +341,8 @@ IC_KM <- cbind(Sn_50 - qnorm(0.975) * sqrt(Var_Sn_50),
 Calculer un estimateur pour la variance de la fonction de survie à l'aide de la formule de Greenwood :
 \begin{align*}
     \widehat{Var}(\hat{S}_n(t))
-    &=[\hat{S}_n(y_j)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)}
-\end{align*}
-\begin{align*}
-    \widehat{Var}(\hat{S}_n(y_j)) = \left\{
+    &=[\hat{S}_n(y_j)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)} \\
+    \widehat{Var}(\hat{S}_n(y_j)) &= \left\{
         \begin{array}{ll}
             `r formule_Greenwood[1]`&,\ i=1,\\
             `r formule_Greenwood[2]`&,\ i=2,\\
