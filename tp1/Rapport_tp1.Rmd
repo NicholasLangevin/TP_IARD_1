@@ -1,9 +1,32 @@
 ---
-title: "Mathématiques actuarielles IARD I  \n Travail pratique 1"
-author: "Nicholas Langevin  \n Alexandre Turcotte"
-date: '2018-10-26'
 output: pdf_document
 ---
+\newpage
+\begin{flushright}
+    Équipe no 4 
+\end{flushright}
+
+\begin{center}
+    \vspace{5\baselineskip}
+    Nicholas Langevin \\
+    (XXX XXX XXX) \\
+    \vspace{2\baselineskip}
+    Alexandre Turcotte \\
+    (111 172 613) \\
+    \vspace{8\baselineskip}
+    Mathématiques actuarielles IARD 1 \\
+    ACT-2005 \\
+    \vspace{8\baselineskip}
+    \textbf{Travail pratique 1} \\
+    \vspace{8\baselineskip}
+    Travail présenté à \\
+    Andrew Luong \\
+    \vspace{8\baselineskip}
+    École d’actuariat \\
+    Université Laval \\
+    Automne 2018
+\end{center}
+
 
 # Question 1
 ### a) Estimation du coefficient d'asymétrie
@@ -19,10 +42,25 @@ coef_asymetrie <- function(x){
 
 estimateur_coef_asymetrie <- coef_asymetrie(data)
 
-hist(data, probability = TRUE,
-     main = "Histogramme des données",
-     ylab = "Densité",
-     xlab = "Données");curve(dexp(x,1), add = TRUE)
+#hist(data, probability = TRUE,
+#     main = "Histogramme des données",
+#     ylab = "Densité",
+#     xlab = "Données");curve(dexp(x,1), add = TRUE)
+
+library(ggplot2)
+data2 <- data.frame(data)
+df <- data.frame(x = data, y = dexp(data, 1))
+
+ggplot(data = data2) +
+        geom_histogram(aes(x = data, y = ..density..),
+                   binwidth = 0.25, fill = "grey", color = "black") +
+        geom_line(data = df, aes(x = data, y = y), color = "red") +
+        ggtitle("Histogramme des valeurs simulées à partir \nd'une loi exponentielle de moyenne 1") + 
+        theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
+        xlab("Données") +
+        ylab("Densité") +
+        scale_y_continuous(limits = c(0, 1))
+
 ```
 
 À partir de l'histogramme, il est possible de noter que la distribution est plus dense et concentrée à gauche et que la queue de la distribution tend vers la droite. Par conséquent, la distribution n'est pas symétrique et le coefficient d'asymétrie devrait être positif. Cela concorde effectivement avec le coefficient d'asymétrie estimé empiriquement puisqu'il est de `r estimateur_coef_asymetrie` conparativement à celui de la loi normale qui est égal à 0. La loi normale a une distribution symétrique et comme le coefficient d'asymétrie des valeurs simulées est plus grand que celui de la loi normale, cela implique que la distribution est asymétrique vers la droite. Donc, elle possède une queue de distribution à droite comme il est possible d'observer sur l'histogramme précédent.  
@@ -282,8 +320,7 @@ La table précèdente présente toutes les données utiles permettant de déterm
 # Graphique de la fonction de survie estimée par l'estimateur Kaplan-Meier
 library(ggplot2)
 ggplot(data = tableau2, aes(x=unlist(tableau2["yi"]),y=unlist(tableau2["Kaplan-Meier"])))+ 
-        geom_point() + 
-        geom_line() + 
+        geom_step() + 
         ggtitle("Valeur de la fonction de survie estimée à l'aide de l'estimateur\nKaplan-Meier en fonction des temps de décès ou de retraits") + 
         theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
         xlab("Temps") +
@@ -457,24 +494,40 @@ data
 ```
 
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
-# Fonction pour calculer le coéficient d'asymétrie.
+# Fonction pour calculer le coefficient d'asymétrie.
 coef_asymetrie <- function(x){
     mu <- mean(x)
     sd <- sd(x)
     mean((x - mu)^3) / sd^3 
 }
 
-# Estimation du coéficient d'asymétrie des données.
+# Estimation du coefficient d'asymétrie des données.
 estimateur_coef_asymetrie <- coef_asymetrie(data)
 
-# Histograme des données avec la courbe théorique d'un loi exponentielle(teta = 1)
+# Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)
 hist(data, probability = TRUE,
      main = "Histogramme des données",
      ylab = "Densité",
      xlab = "Données");curve(dexp(x,1), add = TRUE)
+
+# Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)
+library(ggplot2)
+data2 <- data.frame(data)
+df <- data.frame(x = data, y = dexp(data, 1))
+
+ggplot(data = data2) +
+        geom_histogram(aes(x = data, y = ..density..),
+                   binwidth = 0.25, fill = "grey", color = "black") +
+        geom_line(data = df, aes(x = data, y = y), color = "red") +
+        ggtitle("Histogramme des valeurs simulées à partir 
+                    d'une loi exponentielle de moyenne 1") + 
+        theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
+        xlab("Données") +
+        ylab("Densité") +
+        scale_y_continuous(limits = c(0, 1))
 ```
 
-\newpage
+
 ### b) Intervalle de confiance pour le coefficient d'asymétrie
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
 # Estimation du theta 
@@ -483,13 +536,13 @@ teta <- mean(data)
 # Simulation de 50 échantillions
 echantillion <- lapply(1:50, function(i) rexp(100, teta))
 
-# Estimation des 50 coéficients d'asymétrie
+# Estimation des 50 coefficients d'asymétrie
 coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
 
 # Estimation de la variance empirique
 variance_coef_asymetrie <- var(coef_asymetrie_simul)
 
-# Interval de confiance pour le coéficient d'asymétrie
+# Interval de confiance pour le coefficient d'asymétrie
 IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie - 
                                qnorm(0.975) * sqrt(variance_coef_asymetrie),
                            estimateur_coef_asymetrie + 
@@ -499,7 +552,7 @@ IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie -
 ### c) Coefficient d'asymétrie théorique
 Aucun calcul R n'a été fait dans cette section.
 
-
+\newpage
 # Question 2
 ### a) Estimation de $E[min(X,u)]$
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
