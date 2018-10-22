@@ -5,11 +5,10 @@ date: '2018-10-26'
 output: pdf_document
 ---
 
-\newpage
 # Question 1
 ### a) Estimation du coefficient d'asymétrie
  
-```{R}
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 data <-  rexp(100, 1)
 
 coef_asymetrie <- function(x){
@@ -33,7 +32,7 @@ hist(data, probability = TRUE,
 
 ### b) Intervalle de confiance pour le coefficient d'asymétrie
 
-```{R}
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 teta <- mean(data)
 echantillion <- lapply(1:50, function(i) rexp(100, teta))
 coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
@@ -52,8 +51,6 @@ Avec la méthode de ré-échantillonnage, la variance estimée pour le coefficie
 [`r IC_coef_asymetrie`]
 \end{align*}
 
-
-\newpage
 
 ### c) Coefficient d'asymétrie théorique
 Les moments de la loi exponentielle sont donnés par:
@@ -142,7 +139,6 @@ xtable(resultats, caption = "Valeurs de l'espérance limitée pour chaque limite
 $E[min(X,u)]$ estimé est une fonction croissante en fonction du $u$. En effet, le tableau présente une augmentation de la valeur de l'espérance lorsque $u$ augmente. Cela s'avère tout à fait logique puisque lorsque $u$ est petit, la fonction $min(X,u)$ prend davantage en considération les valeurs de $u$. Par conséquent, les valeurs supérieures de $x$ sont réduites, ce qui réduit donc la moyenne, car elle ne tient compte que des valeurs inférieures ou égales à $u$. Alors, si $u$ augmente, l'espérance prendra en compte des valeurs plus grande de $x$, car $u$ aura augmenté.
 
 
-\newpage
 ### b) Intervalle de confiance pour $E[min(X,u)]$
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Estimer le paramètre teta de la loi exponentielle
@@ -257,28 +253,28 @@ xtable(tableau2, caption = "Données permettant de trouver l'estimateur Kaplan-M
 La table précèdente présente toutes les données utiles permettant de déterminer l'estimateur Kaplan-Meier. Par conséquent, il est possible de calculer cet estimateur à partir de sa définition :
 
 \begin{align*}
-    \hat{S_n(t)} = \left\{
+    \hat{S}_n(t) = \left\{
         \begin{array}{lll}
             1, \ 0\leqslant t<y,\\
             \\
-            \prod_{i=1}^{j-1}(\frac{r_i-S_i}{r_i})  ,\ y_{j-1}\leqslant t<y_i,\\
+            \prod\limits_{i=1}^{j-1}(\frac{r_i-S_i}{r_i})  ,\ y_{j-1}\leqslant t<y_i,\\
             \\
-            \prod_{i=1}^{k}(\frac{r_i-S_i}{r_i}) , \ t>y_k
+            \prod\limits_{i=1}^{k}(\frac{r_i-S_i}{r_i}) , \ t>y_k
         \end{array}
     \right.
 \end{align*}
 \begin{align*}
-    \hat{S_n(i)} = \left\{
-        \begin{array}{lllllllll}
-            1, \ 0\leqslant i<1,\\
-            `r Estimateur_KM[1]`,\ 1\leqslant i<2,\\
-            `r Estimateur_KM[2]`,\ 2\leqslant i<3,\\
-            `r Estimateur_KM[3]`,\ 3\leqslant i<4,\\
-            `r Estimateur_KM[4]`,\ 4\leqslant i<5,\\
-            `r Estimateur_KM[5]`,\ 5\leqslant i<6,\\
-            `r Estimateur_KM[6]`,\ 6\leqslant i<7,\\
-            `r Estimateur_KM[7]`,\ 7\leqslant i<8,\\
-            `r Estimateur_KM[8]`,\ i \geqslant 8
+    \hat{S}_n(i) = \left\{
+        \begin{array}{ll}
+            1                   &, 0\leqslant i<1,\\
+            `r Estimateur_KM[1]`&, 1\leqslant i<2,\\
+            `r Estimateur_KM[2]`&, 2\leqslant i<3,\\
+            `r Estimateur_KM[3]`&, 3\leqslant i<4,\\
+            `r Estimateur_KM[4]`&, 4\leqslant i<5,\\
+            `r Estimateur_KM[5]`&, 5\leqslant i<6,\\
+            `r Estimateur_KM[6]`&, 6\leqslant i<7,\\
+            `r Estimateur_KM[7]`&, 7\leqslant i<8,\\
+            `r Estimateur_KM[8]`&, i \geqslant 8
         \end{array}
     \right.
 \end{align*}
@@ -346,19 +342,19 @@ IC_KM <- cbind(Sn_50 - qnorm(0.975) * sqrt(Var_Sn_50),
 
 Calculer un estimateur pour la variance de la fonction de survie à l'aide de la formule de Greenwood :
 \begin{align*}
-    \hat{Var(\hat{S_n(t))}}
-    &=(\hat{S_n(y_j)})^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)}
+    \widehat{Var}(\hat{S}_n(t))
+    &=[\hat{S}_n(y_j)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)}
 \end{align*}
 \begin{align*}
-    \hat{Var(\hat{S_n(y_j))}} = \left\{
-        \begin{array}{lllllll}
-            `r formule_Greenwood[1]`,\ i=1,\\
-            `r formule_Greenwood[2]`,\ i=2,\\
-            `r formule_Greenwood[3]`,\ i=3,\\
-            `r formule_Greenwood[4]`,\ i=4,\\
-            `r formule_Greenwood[5]`,\ i=5,\\
-            `r formule_Greenwood[6]`,\ i=6,\\
-            `r formule_Greenwood[7]`,\ i=7
+    \widehat{Var}(\hat{S}_n(y_j)) = \left\{
+        \begin{array}{ll}
+            `r formule_Greenwood[1]`&,\ i=1,\\
+            `r formule_Greenwood[2]`&,\ i=2,\\
+            `r formule_Greenwood[3]`&,\ i=3,\\
+            `r formule_Greenwood[4]`&,\ i=4,\\
+            `r formule_Greenwood[5]`&,\ i=5,\\
+            `r formule_Greenwood[6]`&,\ i=6,\\
+            `r formule_Greenwood[7]`&,\ i=7
         \end{array}
     \right.
 \end{align*}
@@ -419,7 +415,7 @@ Donc, dans le cas de $S_n(50)$, la variance de la fonction de survie sous OGIVE 
 Ainsi, en ayant $S_n(50)$ et $Var(S_n(50))$, il est possible d'évaluer l'intervalle de confiance au niveau de confiance 95%. 
 \begin{align*}
     IC \ pour \ S_n(y_{50})
-    &: \ \hat{S_n(y_{50}))} \pm z_{0.975} \sqrt{\hat{Var(\hat{S_n(y_{50}))}}} \\
+    &: \ \hat{S}_n(y_{50})) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(y_{50}))}\\
     &: \ `r Sn_50` \pm z_{0.975} \sqrt{`r Var_Sn_50`} \\
     &: \ [`r IC_KM`]
 \end{align*}
@@ -438,9 +434,9 @@ IC_log_KM <- cbind(Sn_50^(1/u),
 La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log (-log) au niveau de confiance 95% est déterminé de cette façon : 
 \begin{align*}
     IC \ log \ transformed \ pour \ S_n(y_{50})
-    &: \ [\hat{S_n(y_{50}))}^{1/u} , \hat{S_n(y_{50}))}^{u}] \\
+    &: \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
     où \ u
-    &= e^{\frac{z_{0.975} \sqrt{\hat{Var(\hat{S_n(y_{50}))}}}}{\hat{S_n(y_{50}))} ln(\hat{S_n(y_{50}))})}} \\
+    &= e^{\frac{z_{0.975} \sqrt{\hat{Var}(\hat{S}_n(y_{50}))}}{\hat{S}_n(y_{50})) ln(\hat{S}_n(y_{50})))}} \\
     &= e^{\frac{z_{0.975} \sqrt{`r Var_Sn_50`}}{`r Sn_50` ln(`r Sn_50`)}} \\
     \\
     IC \ log \ transformed \ pour \ S_n(y_{50}) 
@@ -454,10 +450,59 @@ L'intervalle de confiance devrait être plus petit et précis dans le cas de la 
 \newpage
 # Annexe
 # Question 1
-### a) Échantillon de 100 données simulées à partir d'une loi exponentielle ($\theta =1$) :
+### a) Estimation du coefficient d'asymétrie 
+Échantillon de 100 données simulées à partir d'une loi exponentielle ($\theta =1$) :
+```{R eval = FALSE, echo = TRUE}
+data <-  rexp(100, 1)
+```
+
 ```{R eval = TRUE, echo = FALSE}
 data
 ```
+
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Fonction pour calculer le coéficient d'asymétrie.
+coef_asymetrie <- function(x){
+    mu <- mean(x)
+    sd <- sd(x)
+    mean((x - mu)^3) / sd^3 
+}
+
+# Estimation du coéficient d'asymétrie des données.
+estimateur_coef_asymetrie <- coef_asymetrie(data)
+
+# Histograme des données avec la courbe théorique d'un loi exponentielle(teta = 1)
+hist(data, probability = TRUE,
+     main = "Histogramme des données",
+     ylab = "Densité",
+     xlab = "Données");curve(dexp(x,1), add = TRUE)
+```
+
+\newpage
+### b) Intervalle de confiance pour le coefficient d'asymétrie
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Estimation du theta 
+teta <- mean(data)
+
+# Simulation de 50 échantillions
+echantillion <- lapply(1:50, function(i) rexp(100, teta))
+
+# Estimation des 50 coéficients d'asymétrie
+coef_asymetrie_simul <- sapply(1:50, function(i) coef_asymetrie(echantillion[[i]]) )
+
+# Estimation de la variance empirique
+variance_coef_asymetrie <- var(coef_asymetrie_simul)
+
+# Interval de confiance pour le coéficient d'asymétrie
+IC_coef_asymetrie <- cbind(estimateur_coef_asymetrie - 
+                               qnorm(0.975) * sqrt(variance_coef_asymetrie),
+                           estimateur_coef_asymetrie + 
+                               qnorm(0.975) * sqrt(variance_coef_asymetrie))
+```
+
+### c) Coefficient d'asymétrie théorique
+Aucun calcul R n'a été fait dans cette section.
+
 
 # Question 2
 ### a) Estimation de $E[min(X,u)]$
@@ -527,6 +572,8 @@ xtable(resultats_2, caption = "Valeurs de l'espérance limitée et de sa varianc
 ### c) $E[min(X,u)]$ théorique
 Aucun calcul R n'a été fait dans cette section.
 
+
+\newpage
 # Question 3
 ### a) Détermination de la fonction de survie à l'aide de l'estimateur Kaplan-Meier
 ```{R echo = TRUE, eval=FALSE, results = 'asis', message = FALSE, warning = FALSE}
