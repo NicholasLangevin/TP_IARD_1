@@ -375,7 +375,7 @@ u <- exp(qnorm(0.975) * sqrt(Var_Sn_50) / Sn_50 / log(Sn_50))
 IC_log_KM <- cbind(Sn_50^(1/u),
               Sn_50^u)
 ```
-La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log transformed au niveau de confiance 95% est déterminé de cette façon : 
+La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log transformed au niveau de confiance 95% est déterminé de cette façon: 
 \begin{align*}
     \hat{S}_n(y_{50}) &\in  \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
     où \ u
