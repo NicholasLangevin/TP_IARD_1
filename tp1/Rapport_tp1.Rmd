@@ -42,11 +42,6 @@ coef_asymetrie <- function(x){
 
 estimateur_coef_asymetrie <- coef_asymetrie(data)
 
-#hist(data, probability = TRUE,
-#     main = "Histogramme des données",
-#     ylab = "Densité",
-#     xlab = "Données");curve(dexp(x,1), add = TRUE)
-
 library(ggplot2)
 data2 <- data.frame(data)
 df <- data.frame(x = data, y = dexp(data, 1))
@@ -136,7 +131,7 @@ Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est 
 \newpage
 
 # Question 2
-### a) Estimation de $E[min(X,u)]$
+### a) Estimation de l'espérance limitée
 
 La fonction quantile théorique d'une loi exponentielle ($\theta =1$) est déterminée de cette façon :
 \begin{align*}
@@ -177,7 +172,7 @@ xtable(resultats, caption = "Valeurs de l'espérance limitée pour chaque limite
 $E[min(X,u)]$ estimé est une fonction croissante en fonction du $u$. En effet, le tableau présente une augmentation de la valeur de l'espérance lorsque $u$ augmente. Cela s'avère tout à fait logique puisque lorsque $u$ est petit, la fonction $min(X,u)$ prend davantage en considération les valeurs de $u$. Par conséquent, les valeurs supérieures de $x$ sont réduites, ce qui réduit donc la moyenne, car elle ne tient compte que des valeurs inférieures ou égales à $u$. Alors, si $u$ augmente, l'espérance prendra en compte des valeurs plus grande de $x$, car $u$ aura augmenté.
 
 
-### b) Intervalle de confiance pour $E[min(X,u)]$
+### b) Intervalle de confiance pour l'espérance limitée
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Estimer le paramètre teta de la loi exponentielle
 teta <- mean(data)
@@ -213,7 +208,7 @@ options(xtable.comment = FALSE)
 xtable(resultats_2, caption = "Valeurs de l'espérance limitée et de sa variance pour les percentiles 0.5 et 0.75",  
                  align = c("c", "c", "c", "c", "c"))
 ```
-Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{-1}(0.5))]$ est de $???????$, alors que celle pour $E[min(X,F^{-1}(0.75))]$ est de $???????$. À partir des estimateurs de $E[min(X,u)]$ calculés en a) pour $u = F^{-1}(0.5)$ et $u = F^{-1}(0.75)$ et de ces variances estimées, il est possible d'obtenir les intervalles de confiance suivants : 
+Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{-1}(0.5))]$ est de ??????, alors que celle pour $E[min(X,F^{-1}(0.75))]$ est de $???????$. À partir des estimateurs de $E[min(X,u)]$ calculés en a) pour $u = F^{-1}(0.5)$ et $u = F^{-1}(0.75)$ et de ces variances estimées, il est possible d'obtenir les intervalles de confiance suivants : 
 
 \begin{align*}
 [`r IC_Esperance_limite_simul[[1]]`] ,\ pour \ u = F^{-1}(0.5)
@@ -225,7 +220,7 @@ Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{
 
 \newpage
 
-### c) $E[min(X,u)]$ théorique
+### c) Espérance limitée théorique
 \begin{align*}
     X 
     &\sim Exp(\theta = 1) \\

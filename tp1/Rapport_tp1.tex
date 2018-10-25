@@ -1,0 +1,851 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{}
+  \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+  \author{}
+  \preauthor{}\postauthor{}
+  \date{}
+  \predate{}\postdate{}
+
+
+\begin{document}
+
+\newpage
+
+\begin{flushright}
+    Équipe no 4 
+\end{flushright}
+
+\begin{center}
+    \vspace{5\baselineskip}
+    Nicholas Langevin \\
+    (111 184 631) \\
+    \vspace{2\baselineskip}
+    Alexandre Turcotte \\
+    (111 172 613) \\
+    \vspace{8\baselineskip}
+    Mathématiques actuarielles IARD 1 \\
+    ACT-2005 \\
+    \vspace{8\baselineskip}
+    \textbf{Travail pratique 1} \\
+    \vspace{8\baselineskip}
+    Travail présenté à \\
+    Andrew Luong \\
+    \vspace{8\baselineskip}
+    École d’actuariat \\
+    Université Laval \\
+    Automne 2018
+\end{center}
+
+\section{Question 1}\label{question-1}
+
+\subsubsection{a) Estimation du coefficient
+d'asymétrie}\label{a-estimation-du-coefficient-dasymetrie}
+
+\includegraphics{Rapport_tp1_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+À partir de l'histogramme, il est possible de noter que la distribution
+est plus dense et concentrée à gauche et que la queue de la distribution
+tend vers la droite. Par conséquent, la distribution n'est pas
+symétrique et le coefficient d'asymétrie devrait être positif. Cela
+concorde effectivement avec le coefficient d'asymétrie estimé
+empiriquement puisqu'il est de 1.3076743 conparativement à celui de la
+loi normale qui est égal à 0. La loi normale a une distribution
+symétrique et comme le coefficient d'asymétrie des valeurs simulées est
+plus grand que celui de la loi normale, cela implique que la
+distribution est asymétrique vers la droite. Donc, elle possède une
+queue de distribution à droite comme il est possible d'observer sur
+l'histogramme précédent.
+
+\newpage
+
+\subsubsection{b) Intervalle de confiance pour le coefficient
+d'asymétrie}\label{b-intervalle-de-confiance-pour-le-coefficient-dasymetrie}
+
+Avec la méthode de ré-échantillonnage, la variance estimée pour le
+coefficient d'asymétrie est de 0.3142622. À partir de l'estimateur
+ponctuel du coefficient d'asymétrie calculé en a) et de cette variance
+estimée, il est possible d'obtenir l'intervalle de confiance suivant
+pour le coefficient d'asymétrie :
+
+\begin{align*}
+[0.2089363, 2.4064123]
+\end{align*}
+
+\subsubsection{c) Coefficient d'asymétrie
+théorique}\label{c-coefficient-dasymetrie-theorique}
+
+Les moments de la loi exponentielle sont donnés par:
+
+\begin{minipage}{5cm}
+    \begin{align*}
+        E[x]   &= \left. M_x^{'}(t) \right|_{t=0} \\
+       &= \frac{d}{dt} \left.\left( \frac{\theta}{\theta - t} \right)\right|_{t=0} \\
+       &= \left.\left( \frac{\theta}{(\theta - t)^2} \right)\right|_{t=0} \\
+       &= \frac{1}{\theta}
+    \end{align*}
+\end{minipage}\begin{minipage}{5cm}
+    \begin{align*}
+        E[x^2] &= \left. M_x^{''}(t) \right|_{t=0} \\
+       &= \frac{d}{dt} \left.\left( \frac{\theta}{(\theta - t)^2} \right)\right|_{t=0} \\
+       &= \left.\left( \frac{2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
+       &= \frac{2}{\theta^2}
+    \end{align*}
+\end{minipage}\begin{minipage}{5cm}
+    \begin{align*}
+        E[x^3] &= \left. M_x^{'''}(t) \right|_{t=0} \\
+       &= \frac{d}{dt} \left.\left( \frac{2 \theta}{(\theta - t)^3} \right)\right|_{t=0} \\
+       &= \left.\left( \frac{6 \theta}{(\theta - t)^4} \right)\right|_{t=0} \\
+       &= \frac{6}{\theta^3}
+    \end{align*}
+\end{minipage}
+
+Ainsi, le coeficient d'asymétrie théorique est donnée par
+
+\begin{align*}
+    \gamma 
+    &= \frac{E\left[ (x - \mu)^3 \right]}{\sigma^3} \\
+    &= \frac{1}{\sigma^3} \left( E[x^3 - 3x^2\mu + 3x\mu^2 - \mu^3] \right) \\
+    &= \frac{1}{\sigma^3} \left( E[x^3] - 3\mu E[x^2] + 3\mu^2E[x] - \mu^3  \right) \\
+    &= \theta^3 \left[ \frac{6}{\theta^3} - 3 \left(\frac{1}{\theta}\right) \left(\frac{2}{\theta^2}\right) + 3 \left(\frac{1}{\theta}\right)^3 - \left(\frac{1}{\theta}\right)^3 \right] \\
+    &= \theta^3 \left[ \frac{6}{\theta^3} - \frac{6}{\theta^3} + \frac{2}{\theta^3} \right] \\
+    &= 6 - 6 + 2 \\
+    &= 2
+\end{align*}
+
+Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne
+1 est de 2. Cela s'avère compatible avec l'estimé ponctuel obtenu en a)
+puisque celui-ci est de 1.3076743, ce qui est assez près de 2. Pour ce
+qui est de l'intervalle de confiance obtenu en b), il est possible
+d'observer que la valeur théorique est incluse dans cette intervalle qui
+est 0.2089363, 2.4064123. Par conséquent, les estimateurs obtenus sont
+compatibles avec la valeur théorique. Toutefois, ceux-ci ne sont pas
+très précis en raison du nombre d'observations qui est assez faible,
+soit 100 observations. En augmentant le nombre d'observation,
+l'intervalle de confiance serait plus petit et l'estimateur serait plus
+précis.
+
+\newpage
+
+\section{Question 2}\label{question-2}
+
+\subsubsection{a) Estimation de l'espérance
+limitée}\label{a-estimation-de-lesperance-limitee}
+
+La fonction quantile théorique d'une loi exponentielle (\(\theta =1\))
+est déterminée de cette façon :
+
+\begin{align*}
+    X 
+    &\sim Exp(\theta = 1) \\
+    F(x) 
+    &= 1 - e^{-\frac{x}{\theta}} \\
+    &= 1 - e^{-x} \\
+    k 
+    &= 1 - e^{-x} \\
+    1 - k 
+    &= e^{-x} \\
+    F_x^{-1}(k) 
+    &= x = -ln(1-k) \\
+\end{align*}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccc}
+  \hline
+ & Percentile & Limite u & Espérance limitée \\ 
+  \hline
+1 & 0.25 & 0.29 & 0.25 \\ 
+  2 & 0.35 & 0.43 & 0.36 \\ 
+  3 & 0.50 & 0.69 & 0.53 \\ 
+  4 & 0.60 & 0.92 & 0.64 \\ 
+  5 & 0.75 & 1.39 & 0.82 \\ 
+  6 & 0.85 & 1.90 & 0.93 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de l'espérance limitée pour chaque limite u donnée} 
+\end{table}
+
+\(E[min(X,u)]\) estimé est une fonction croissante en fonction du \(u\).
+En effet, le tableau présente une augmentation de la valeur de
+l'espérance lorsque \(u\) augmente. Cela s'avère tout à fait logique
+puisque lorsque \(u\) est petit, la fonction \(min(X,u)\) prend
+davantage en considération les valeurs de \(u\). Par conséquent, les
+valeurs supérieures de \(x\) sont réduites, ce qui réduit donc la
+moyenne, car elle ne tient compte que des valeurs inférieures ou égales
+à \(u\). Alors, si \(u\) augmente, l'espérance prendra en compte des
+valeurs plus grande de \(x\), car \(u\) aura augmenté.
+
+\subsubsection{b) Intervalle de confiance pour l'espérance
+limitée}\label{b-intervalle-de-confiance-pour-lesperance-limitee}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ccccc}
+  \hline
+ & Percentile & Limite u & Espérance limité & Variance \\ 
+  \hline
+1 & 0.50 & 0.69 & 0.53 & 0.00 \\ 
+  2 & 0.75 & 1.39 & 0.82 & 0.00 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de l'espérance limitée et de sa variance pour les percentiles 0.5 et 0.75} 
+\end{table}
+
+Avec la méthode de ré-échantillonnage, la variance estimée pour
+\(E[min(X,F^{-1}(0.5))]\) est de 7.1668809\times 10\^{}\{-4\}, alors que
+celle pour \(E[min(X,F^{-1}(0.75))]\) est de \(???????\). À partir des
+estimateurs de \(E[min(X,u)]\) calculés en a) pour \(u = F^{-1}(0.5)\)
+et \(u = F^{-1}(0.75)\) et de ces variances estimées, il est possible
+d'obtenir les intervalles de confiance suivants :
+
+\begin{align*}
+[0.4740193, 0.5789598] ,\ pour \ u = F^{-1}(0.5)
+\end{align*}\begin{align*}
+[0.7124814, 0.9211603] ,\ pour \ u = F^{-1}(0.75)
+\end{align*}
+
+\newpage
+
+\subsubsection{c) Espérance limitée
+théorique}\label{c-esperance-limitee-theorique}
+
+\begin{align*}
+    X 
+    &\sim Exp(\theta = 1) \\
+    S(x) 
+    &= e^{-x}, \ où \ x>0 \\
+    u
+    &=F_x^{-1}(k) = -ln(1-k)\\
+    E\left[ min(X,u) \right]
+    &=E\left[ X \wedge u \right] \\
+    &=\int_{0}^{u} x f_x(x) dx + \int_{0}^{u} u f_x(x) dx \\
+    &=\int_{0}^{u} S_x(x) dx \\
+    &=\int_{0}^{u} e^{-x} dx  \\
+    &=[-e^{-x}]_{0}^{u} \\
+    &=1 - e^{-u} \\
+    &=1 - e^{-(-ln(1-k))} \\
+    &=1 - (1-k) \\
+    &= k
+\end{align*}
+
+Ainsi, les valeurs théoriques des espérances limitées sont :
+
+\begin{align*}
+    E\left[min(X,F_x^{-1}(0.5))\right] = 0.5 \\
+    E\left[min(X,F_x^{-1}(0.75))\right] = 0.75
+\end{align*}
+
+L'espérance limitée théorique de la loi exponentielle de moyenne 1 est
+égale à son quantile. Par conséquent, \(E[min(X,F^{-1}(0.5))] = 0.5\) et
+\(E[min(X,F^{-1}(0.75))] = 0.75\). Cela s'avère compatible avec les
+valeurs estimées obtenues en a) puisque ceux-ci sont de 0.5264896 et
+0.8168208, ce qui est assez près des valeurs théoriques. Pour ce qui est
+des intervalles de confiance obtenu en b), il est possible d'observer
+que les valeurs théoriques sont incluses dans chacun des intervalles
+respectifs qui sont {[}0.4740193, 0.5789598{]}, pour le premier, et
+{[}0.7124814, 0.9211603{]}, pour le second. Par conséquent, les
+estimateurs obtenus sont compatibles avec les valeurs théoriques. Il est
+donc possible d'affirmer que ces estimateurs non-paramétriques sont
+assez performants puisque les valeurs obtenues sont très près de la
+valeur théorique.
+
+\newpage
+
+\section{Question 3}\label{question-3}
+
+\subsubsection{a) Détermination de la fonction de survie à l'aide de
+l'estimateur
+Kaplan-Meier}\label{a-determination-de-la-fonction-de-survie-a-laide-de-lestimateur-kaplan-meier}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{cccccc}
+  \hline
+ & i & yi & Si & ri & Kaplan-Meier \\ 
+  \hline
+1 &   1 & 30.00 & 1.00 & 10.00 & 0.90 \\ 
+  2 &   2 & 40.00 & 1.00 & 9.00 & 0.80 \\ 
+  3 &   3 & 57.00 & 1.00 & 8.00 & 0.70 \\ 
+  4 &   4 & 65.00 & 1.00 & 7.00 & 0.60 \\ 
+  5 &   5 & 84.00 & 1.00 & 5.00 & 0.48 \\ 
+  6 &   6 & 90.00 & 1.00 & 4.00 & 0.36 \\ 
+  7 &   7 & 98.00 & 1.00 & 2.00 & 0.18 \\ 
+  8 &   8 & 101.00 & 1.00 & 1.00 & 0.00 \\ 
+   \hline
+\end{tabular}
+\caption{Données permettant de trouver l'estimateur Kaplan-Meier} 
+\end{table}
+
+La table précèdente présente toutes les données utiles permettant de
+déterminer l'estimateur Kaplan-Meier. Par conséquent, il est possible de
+calculer cet estimateur à partir de sa définition :
+
+\begin{align*}
+    \hat{S}_n(t) &= \left\{
+        \begin{array}{lll}
+            1, \ 0\leqslant t<y,\\
+            \\
+            \prod\limits_{i=1}^{j-1}(\frac{r_i-S_i}{r_i})  ,\ y_{j-1}\leqslant t<y_i,\\
+            \\
+            \prod\limits_{i=1}^{k}(\frac{r_i-S_i}{r_i}) , \ t>y_k
+        \end{array}
+    \right. \\
+    \hat{S}_n(i) &= \left\{
+        \begin{array}{ll}
+            1                   &, 0\leqslant i<1,\\
+            0.9&, 1\leqslant i<2,\\
+            0.8&, 2\leqslant i<3,\\
+            0.7&, 3\leqslant i<4,\\
+            0.6&, 4\leqslant i<5,\\
+            0.48&, 5\leqslant i<6,\\
+            0.36&, 6\leqslant i<7,\\
+            0.18&, 7\leqslant i<8,\\
+            0&, i \geqslant 8
+        \end{array}
+    \right.
+\end{align*}
+
+\subsubsection{\texorpdfstring{b) Graphique de l'estimateur Kaplan-Meier
+et intervalle de confiance pour
+\(S_n(50)\)}{b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour S\_n(50)}}\label{b-graphique-de-lestimateur-kaplan-meier-et-intervalle-de-confiance-pour-s_n50}
+
+\includegraphics{Rapport_tp1_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+Calculer un estimateur pour la variance de la fonction de survie à
+l'aide de la formule de Greenwood :
+
+\begin{align*}
+    \widehat{Var}(\hat{S}_n(t))
+    &=[\hat{S}_n(y_j)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)} \\
+    \widehat{Var}(\hat{S}_n(y_j)) &= \left\{
+        \begin{array}{ll}
+            0.009&,\ i=1,\\
+            0.016&,\ i=2,\\
+            0.021&,\ i=3,\\
+            0.024&,\ i=4,\\
+            0.02688&,\ i=5,\\
+            0.02592&,\ i=6,\\
+            0.02268&,\ i=7
+        \end{array}
+    \right.
+\end{align*}
+
+Alors, en ayant les valeurs de l'estimateur Kaplan-Meier et celles de
+Greenwood, il est possible de déduire les intervalles de confiance au
+moment des décès. Toutefois, il faut déterminer l'intervalle de
+confiance au niveau 95\% pour S(50), qui est entre deux moments de
+décès. Alors, il faut faire une interpolation linéaire (OGIVE) entre
+\(y_i = 40\) et \(y_i = 57\).
+
+\newpage
+
+La fonction de survie sous OGIVE est donnée par:
+
+\begin{align*}
+    F_n^{OGIVE}(x)
+    &= (\frac{c_j-x}{c_j-c_{j-1}}) F_n(c_{j-1}) + (\frac{x-c_{j-1}}{c_j-c_{j-1}}) F_n(c_{j}) \\
+    S_n^{OGIVE}(x)
+    &= 1-F_n^{OGIVE}(x) \\
+    &= 1- (\frac{c_j-x}{c_j-c_{j-1}}) F_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) F_n(c_{j}) \\
+    &= 1 - (\frac{c_j-x}{c_j-c_{j-1}}) + (\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) + (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
+    &= 1- (\frac{(c_j-x) + (x-c_{j-1})}{c_j-c_{j-1}}) + (\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
+    &= 1-1+(\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
+    &=(\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j})
+\end{align*}
+
+Donc, dans le cas de \(S_n(50)\), la fonction de survie sous OGIVE est :
+
+\begin{align*}
+    S_n^{OGIVE}(50)
+    &=(\frac{57-50}{57-40}) S_n(y_{40}) - (\frac{50-40}{57-40}) S_n(y_{57}) \\
+    &= 0.7411765
+\end{align*}
+
+L'estimer de la variance sous OGIVE est donnée par:
+
+\begin{align*}
+    Var(S_n^{OGIVE}(x))
+    &= \frac{(c_j-c_{j-1})^2Var(Y) + (x-c_{j-1})^2Var(Z) + 2(c_j-c_{j-1})(x-c_{j-1})Cov(Y,Z)}{(n(c_j-c_{j-1}))^2} 
+\end{align*}
+
+où,
+
+\begin{align*}
+    Var(Y)
+    &= n S_n(c_{j-1}) (1 - S_n(c_{j-1})) \\
+    Var(Z)
+    &= n (S_n(c_{j-1}) - S_n(c_{j}) (1 - S_n(c_{j-1}) + S_n(c_{j}))) \\
+    Cov(Y,Z)
+    &= -n (1 - S_n(c_{j-1})) (S_n(c_{j-1}) - S_n(c_{j}))
+\end{align*}
+
+Donc, dans le cas de \(S_n(50)\), la variance de la fonction de survie
+sous OGIVE est :
+
+\begin{align*}
+    Var(Y) 
+    &= 8 S_n(y_{40}) (1 - S_n(y_{40})) = 1.28 \\
+    Var(Z)
+    &= 8 (S_n(y_{40}) - S_n(y_{57}) (1 - S_n(y_{40}) + S_n(y_{57}))) = 1.36\\
+    Cov(Y,Z)
+    &= -8 (1 - S_n(y_{40})) (S_n(y_{40}) - S_n(y_{57})) = -0.16 \\
+    \\
+    Var(S_n^{OGIVE}(50))
+    &= \frac{(57-40)^2Var(Y) + (50-40)^2Var(Z) + 2(57-40)(50-40)Cov(Y,Z)}{(8(57-40))^2} \\
+    &= 0.0244118
+\end{align*}
+
+\newpage
+
+Ainsi, en ayant \(S_n(50)\) et \(Var(S_n(50))\), il est possible
+d'évaluer l'intervalle de confiance au niveau de confiance 95\%.
+
+\begin{align*}
+    IC \ pour \ S_n(y_{50})
+    &: \ \hat{S}_n(y_{50})) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(y_{50}))}\\
+    &: \ 0.7411765 \pm z_{0.975} \sqrt{0.0244118} \\
+    &: \ [0.4349465, 1.0474064]
+\end{align*}
+
+\section{Mettre un commentaire ici}\label{mettre-un-commentaire-ici}
+
+\subsubsection{\texorpdfstring{c) Intervalle de confiance pour
+\(S_n(50)\) avec la transformation log
+(-log)}{c) Intervalle de confiance pour S\_n(50) avec la transformation log (-log)}}\label{c-intervalle-de-confiance-pour-s_n50-avec-la-transformation-log--log}
+
+La valeur estimée de la fonction de survie et la valeur estimée de la
+variance sont toujours les mêmes que celles de la section b). Par
+conséquent, seulement l'intervalle de confiance est modifié. Alors,
+l'intervalle de confiance log (-log) au niveau de confiance 95\% est
+déterminé de cette façon :
+
+\begin{align*}
+    IC \ log \ transformed \ pour \ S_n(y_{50})
+    &: \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
+    où \ u
+    &= e^{\frac{z_{0.975} \sqrt{\hat{Var}(\hat{S}_n(y_{50}))}}{\hat{S}_n(y_{50})) ln(\hat{S}_n(y_{50})))}} \\
+    &= e^{\frac{z_{0.975} \sqrt{0.0244118}}{0.7411765 ln(0.7411765)}} \\
+    \\
+    IC \ log \ transformed \ pour \ S_n(y_{50}) 
+    &: \ [0.3042543, 0.9273784]
+\end{align*}
+
+\section{Mettre commentaire ici}\label{mettre-commentaire-ici}
+
+L'intervalle de confiance devrait être plus petit et précis dans le cas
+de la transformation log.
+
+\newpage
+
+\section{Annexe}\label{annexe}
+
+\section{Question 1}\label{question-1-1}
+
+\subsubsection{a) Estimation du coefficient
+d'asymétrie}\label{a-estimation-du-coefficient-dasymetrie-1}
+
+Échantillon de 100 données simulées à partir d'une loi exponentielle
+(\(\theta =1\)) :
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data <-}\StringTok{  }\KeywordTok{rexp}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   [1] 1.045035824 0.462386753 2.750051236 2.291154062 0.033701140
+##   [6] 0.615074305 2.571114166 1.609049067 1.887332367 0.140717380
+##  [11] 0.154829331 1.635541158 0.590173881 1.628642179 2.760963892
+##  [16] 0.038533552 0.402069510 0.889676860 4.756520260 0.109648435
+##  [21] 0.430263955 0.792066487 0.677247164 1.282415408 0.065872191
+##  [26] 0.802996605 2.557728389 2.240621588 1.950693346 0.649358110
+##  [31] 0.777562920 1.366246748 0.936110420 1.058525182 0.602101246
+##  [36] 1.254954812 0.989935359 0.901897225 0.153660473 1.515543282
+##  [41] 0.270008921 0.595027370 0.489034373 0.420450607 1.130850831
+##  [46] 2.776169524 1.692107839 1.317417553 0.123528257 3.976053369
+##  [51] 0.955571028 1.110779357 0.042962004 1.425330060 0.151452010
+##  [56] 0.606168081 1.261892802 0.826618979 0.538590088 0.145382218
+##  [61] 0.520546786 1.204000278 0.139570961 0.044160222 0.382780013
+##  [66] 0.002100709 1.725137759 0.306018017 0.984789335 1.266538891
+##  [71] 2.485354459 0.344354076 1.891666884 0.450025352 1.279359689
+##  [76] 0.046669251 0.342278319 2.682279793 1.355412098 0.338098234
+##  [81] 2.129145985 0.267059965 0.283757456 0.868358850 0.869229000
+##  [86] 0.121072161 1.011644976 3.272451751 1.737017207 2.162735793
+##  [91] 0.759573730 0.085831038 0.817995727 0.217807683 0.539964824
+##  [96] 1.259277469 1.718162406 0.199231977 2.326852387 0.735832595
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Fonction pour calculer le coefficient d'asymétrie.}
+\NormalTok{coef_asymetrie <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x)\{}
+\NormalTok{    mu <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x)}
+\NormalTok{    sd <-}\StringTok{ }\KeywordTok{sd}\NormalTok{(x)}
+    \KeywordTok{mean}\NormalTok{((x }\OperatorTok{-}\StringTok{ }\NormalTok{mu)}\OperatorTok{^}\DecValTok{3}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{sd}\OperatorTok{^}\DecValTok{3} 
+\NormalTok{\}}
+
+\CommentTok{# Estimation du coefficient d'asymétrie des données.}
+\NormalTok{estimateur_coef_asymetrie <-}\StringTok{ }\KeywordTok{coef_asymetrie}\NormalTok{(data)}
+
+\CommentTok{# Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)}
+\KeywordTok{hist}\NormalTok{(data, }\DataTypeTok{probability =} \OtherTok{TRUE}\NormalTok{,}
+     \DataTypeTok{main =} \StringTok{"Histogramme des données"}\NormalTok{,}
+     \DataTypeTok{ylab =} \StringTok{"Densité"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"Données"}\NormalTok{);}\KeywordTok{curve}\NormalTok{(}\KeywordTok{dexp}\NormalTok{(x,}\DecValTok{1}\NormalTok{), }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
+
+\CommentTok{# Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\NormalTok{data2 <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(data)}
+\NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data, }\DataTypeTok{y =} \KeywordTok{dexp}\NormalTok{(data, }\DecValTok{1}\NormalTok{))}
+
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data2) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{geom_histogram}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data, }\DataTypeTok{y =}\NormalTok{ ..density..),}
+                   \DataTypeTok{binwidth =} \FloatTok{0.25}\NormalTok{, }\DataTypeTok{fill =} \StringTok{"grey"}\NormalTok{, }\DataTypeTok{color =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ data, }\DataTypeTok{y =}\NormalTok{ y), }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Histogramme des valeurs simulées à partir }
+\StringTok{                    d'une loi exponentielle de moyenne 1"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =}  \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{, }\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Données"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Densité"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{b) Intervalle de confiance pour le coefficient
+d'asymétrie}\label{b-intervalle-de-confiance-pour-le-coefficient-dasymetrie-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Estimation du theta }
+\NormalTok{teta <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(data)}
+
+\CommentTok{# Simulation de 50 échantillions}
+\NormalTok{echantillion <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }\KeywordTok{rexp}\NormalTok{(}\DecValTok{100}\NormalTok{, teta))}
+
+\CommentTok{# Estimation des 50 coefficients d'asymétrie}
+\NormalTok{coef_asymetrie_simul <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }\KeywordTok{coef_asymetrie}\NormalTok{(echantillion[[i]]) )}
+
+\CommentTok{# Estimation de la variance empirique}
+\NormalTok{variance_coef_asymetrie <-}\StringTok{ }\KeywordTok{var}\NormalTok{(coef_asymetrie_simul)}
+
+\CommentTok{# Interval de confiance pour le coefficient d'asymétrie}
+\NormalTok{IC_coef_asymetrie <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(estimateur_coef_asymetrie }\OperatorTok{-}\StringTok{ }
+\StringTok{                               }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(variance_coef_asymetrie),}
+\NormalTok{                           estimateur_coef_asymetrie }\OperatorTok{+}\StringTok{ }
+\StringTok{                               }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(variance_coef_asymetrie))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{c) Coefficient d'asymétrie
+théorique}\label{c-coefficient-dasymetrie-theorique-1}
+
+Aucun calcul R n'a été fait dans cette section.
+
+\newpage
+
+\section{Question 2}\label{question-2-1}
+
+\subsubsection{\texorpdfstring{a) Estimation de
+\(E[min(X,u)]\)}{a) Estimation de E{[}min(X,u){]}}}\label{a-estimation-de-eminxu}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Déterminer les limites u à l'aide de la fonction quantile}
+\NormalTok{k <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.25}\NormalTok{, }\FloatTok{0.35}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.6}\NormalTok{, }\FloatTok{0.75}\NormalTok{, }\FloatTok{0.85}\NormalTok{)}
+\NormalTok{fonction_quantile <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }\OperatorTok{-}\KeywordTok{log}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{x)}
+\NormalTok{limite_u <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(k, }\ControlFlowTok{function}\NormalTok{(i) }\KeywordTok{fonction_quantile}\NormalTok{(i))}
+
+\CommentTok{# Déterminer l'espérance limitée pour chacune des limites u}
+\NormalTok{Estimateur_Esperance_limite <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(limite_u), }\ControlFlowTok{function}\NormalTok{(u) }
+                                    \KeywordTok{mean}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }
+                                        \KeywordTok{min}\NormalTok{(data[i], limite_u[u]))))  }
+
+\CommentTok{# Publier les résultats pour chaque u}
+\NormalTok{resultats <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(k, limite_u, Estimateur_Esperance_limite)}
+\KeywordTok{colnames}\NormalTok{(resultats) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Percentile'}\NormalTok{,}\StringTok{"Limite u"}\NormalTok{,}\StringTok{"Espérance limitée"}\NormalTok{)}
+
+\KeywordTok{library}\NormalTok{(xtable)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.comment =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{xtable}\NormalTok{(resultats, }\DataTypeTok{caption =} \StringTok{"Valeurs de l'espérance limitée pour chaque limite u donnée"}\NormalTok{,  }
+                 \DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{b) Intervalle de confiance pour
+\(E[min(X,u)]\)}{b) Intervalle de confiance pour E{[}min(X,u){]}}}\label{b-intervalle-de-confiance-pour-eminxu}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Estimer le paramètre teta de la loi exponentielle}
+\NormalTok{teta <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(data)}
+
+\CommentTok{# Créer 50 échantillons de 100 données}
+\NormalTok{echantillion <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }\KeywordTok{rexp}\NormalTok{(}\DecValTok{100}\NormalTok{, teta))}
+
+\CommentTok{# Déterminer l'espérance limitée pour chacun des 50 échantillons et pour }
+\CommentTok{#les percentiles 0.5 et 0.75}
+\NormalTok{Esperance_limite_simul <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{), }\ControlFlowTok{function}\NormalTok{(u) }
+                                \KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{50}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(j) }
+                                    \KeywordTok{mean}\NormalTok{(}\KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{100}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }
+                                        \KeywordTok{min}\NormalTok{(echantillion[[j]][i], limite_u[u])))))}
+
+\CommentTok{# Déterminer la variance de l'espérance limitée pour les deux percentiles donnés}
+\NormalTok{variance_Esperance_limite_simul <-}\StringTok{ }\KeywordTok{sapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{,}\ControlFlowTok{function}\NormalTok{(i) }\KeywordTok{var}\NormalTok{(Esperance_limite_simul[,i]))}
+
+\CommentTok{# Déterminer l'intervalle de confiance}
+\NormalTok{Est_Esperance_limite <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{Est_Esperance_limite[}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\NormalTok{Estimateur_Esperance_limite[}\DecValTok{3}\NormalTok{]}
+\NormalTok{Est_Esperance_limite[}\DecValTok{2}\NormalTok{] <-}\StringTok{ }\NormalTok{Estimateur_Esperance_limite[}\DecValTok{5}\NormalTok{]}
+
+\NormalTok{IC_Esperance_limite_simul <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\ControlFlowTok{function}\NormalTok{(i) }
+                                \KeywordTok{cbind}\NormalTok{(Est_Esperance_limite[i] }\OperatorTok{-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }
+\StringTok{                                          }\KeywordTok{sqrt}\NormalTok{(variance_Esperance_limite_simul[i]),}
+\NormalTok{                                    Est_Esperance_limite[i] }\OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}
+\StringTok{                                        }\KeywordTok{sqrt}\NormalTok{(variance_Esperance_limite_simul[i])))}
+
+\CommentTok{# Publier les résultats }
+\NormalTok{resultats_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{c}\NormalTok{(k[}\DecValTok{3}\NormalTok{], k[}\DecValTok{5}\NormalTok{]), }\KeywordTok{c}\NormalTok{(limite_u[}\DecValTok{3}\NormalTok{], limite_u[}\DecValTok{5}\NormalTok{]), }
+\NormalTok{                          Est_Esperance_limite, variance_Esperance_limite_simul)}
+\KeywordTok{colnames}\NormalTok{(resultats_}\DecValTok{2}\NormalTok{) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Percentile"}\NormalTok{,}\StringTok{"Limite u"}\NormalTok{,}\StringTok{"Espérance limité"}\NormalTok{, }\StringTok{"Variance"}\NormalTok{)}
+
+\KeywordTok{library}\NormalTok{(xtable)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.comment =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{xtable}\NormalTok{(resultats_}\DecValTok{2}\NormalTok{, }\DataTypeTok{caption =} \StringTok{"Valeurs de l'espérance limitée et de sa variance }
+\StringTok{                 pour les percentiles 0.5 et 0.75"}\NormalTok{,  }
+                 \DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{c) \(E[min(X,u)]\)
+théorique}{c) E{[}min(X,u){]} théorique}}\label{c-eminxu-theorique}
+
+Aucun calcul R n'a été fait dans cette section.
+
+\newpage
+
+\section{Question 3}\label{question-3-1}
+
+\subsubsection{a) Détermination de la fonction de survie à l'aide de
+l'estimateur
+Kaplan-Meier}\label{a-determination-de-la-fonction-de-survie-a-laide-de-lestimateur-kaplan-meier-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Présentation des données du problème}
+\NormalTok{tableau1 <-}\StringTok{ }\NormalTok{\{}
+\NormalTok{    Temps <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{30}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{57}\NormalTok{, }\DecValTok{65}\NormalTok{, }\DecValTok{65}\NormalTok{, }\DecValTok{84}\NormalTok{, }\DecValTok{90}\NormalTok{, }\DecValTok{92}\NormalTok{, }\DecValTok{98}\NormalTok{, }\DecValTok{101}\NormalTok{) }
+\NormalTok{    Cens <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+
+    \KeywordTok{data.frame}\NormalTok{(Temps, Cens)}
+\NormalTok{\} }
+
+\CommentTok{# Tableau détaillé permettant de calculer l'estimateur Kaplan-Meier}
+\NormalTok{tableau2 <-}\StringTok{ }\NormalTok{\{}
+\NormalTok{    yi <-}\StringTok{ }\KeywordTok{unique}\NormalTok{(tableau1[}\KeywordTok{which}\NormalTok{(tableau1[,}\DecValTok{2}\NormalTok{] }\OperatorTok{!=}\StringTok{ }\DecValTok{0}\NormalTok{),}\DecValTok{1}\NormalTok{])    }\CommentTok{# moments uniques des décès}
+\NormalTok{    i <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(yi) }
+\NormalTok{    Si <-}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,}\KeywordTok{length}\NormalTok{(yi))                             }\CommentTok{# nombre de décès au temps yi}
+\NormalTok{    ri <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{,}\DecValTok{9}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{)                           }\CommentTok{# nombre de survivants au temps yi}
+    
+    \KeywordTok{data.frame}\NormalTok{(i, yi, Si, ri, }\StringTok{"Kaplan Meier"}\NormalTok{ =}\StringTok{ }\KeywordTok{cumprod}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{Si}\OperatorTok{/}\NormalTok{ri))}
+\NormalTok{\}}
+\KeywordTok{colnames}\NormalTok{(tableau2) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"i"}\NormalTok{, }\StringTok{"yi"}\NormalTok{, }\StringTok{"Si"}\NormalTok{, }\StringTok{"ri"}\NormalTok{, }\StringTok{"Kaplan-Meier"}\NormalTok{)}
+
+\CommentTok{# Déterminer l'estimateur Kaplan-Meier pour chacun des moments uniques des décès}
+\NormalTok{Estimateur_KM <-}\StringTok{ }\KeywordTok{cumprod}\NormalTok{(}\DecValTok{1}\OperatorTok{-}\NormalTok{Si}\OperatorTok{/}\NormalTok{ri)}
+
+\CommentTok{# Publier le tableau 2 }
+\KeywordTok{library}\NormalTok{(xtable)}
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{xtable.comment =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{xtable}\NormalTok{(tableau2, }\DataTypeTok{caption =} \StringTok{"Données permettant de trouver l'estimateur Kaplan-Meier"}\NormalTok{,  }
+                 \DataTypeTok{align =} \KeywordTok{c}\NormalTok{(}\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{, }\StringTok{"c"}\NormalTok{)) }
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{b) Graphique de l'estimateur Kaplan-Meier
+et intervalle de confiance pour
+\(S_n(50)\)}{b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour S\_n(50)}}\label{b-graphique-de-lestimateur-kaplan-meier-et-intervalle-de-confiance-pour-s_n50-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Graphique de la fonction de survie estimée par l'estimateur Kaplan-Meier}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ tableau2, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{unlist}\NormalTok{(tableau2[}\StringTok{"yi"}\NormalTok{]),}\DataTypeTok{y=}\KeywordTok{unlist}\NormalTok{(tableau2[}\StringTok{"Kaplan-Meier"}\NormalTok{])))}\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Valeur de la fonction de survie estimée à l'aide de l'estimateur}
+\StringTok{                Kaplan-Meier en fonction des temps de décès ou de retraits"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{        }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{plot.title =}  \KeywordTok{element_text}\NormalTok{(}\DataTypeTok{face=}\StringTok{"bold"}\NormalTok{, }\DataTypeTok{hjust =} \FloatTok{0.5}\NormalTok{)) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Temps"}\NormalTok{) }\OperatorTok{+}
+\StringTok{        }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Estimateur Kaplan-Meier"}\NormalTok{)}
+
+\CommentTok{# Calculer un estimateur pour la variance de la fonction de survie à l'aide de }
+\CommentTok{# la formule de Greenwood}
+\NormalTok{formule_Greenwood <-}\StringTok{ }\NormalTok{Estimateur_KM}\OperatorTok{^}\DecValTok{2} \OperatorTok{*}\StringTok{ }\KeywordTok{cumsum}\NormalTok{(Si}\OperatorTok{/}\NormalTok{ri}\OperatorTok{/}\NormalTok{(ri}\OperatorTok{-}\NormalTok{Si))}
+
+\CommentTok{# Pour ce qui est de l'intervalle de confiance au niveau 95% pour S(50), il faut faire}
+\CommentTok{# une interpolation linéaire (OGIVE) entre y_i = 40 et y_i = 57.}
+
+\CommentTok{# Estimer S(50) avec la fonction OGIVE}
+\NormalTok{Sn_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{\{}
+\NormalTok{    x <-}\StringTok{ }\DecValTok{50}
+\NormalTok{    ci <-}\StringTok{ }\DecValTok{40}
+\NormalTok{    cj <-}\StringTok{ }\DecValTok{57}
+\NormalTok{    alpha <-}\StringTok{ }\NormalTok{(cj}\OperatorTok{-}\NormalTok{x)}\OperatorTok{/}\NormalTok{(cj}\OperatorTok{-}\NormalTok{ci)}
+    
+\NormalTok{    Estimateur_KM[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{alpha }\OperatorTok{+}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha) }
+\NormalTok{\}}
+
+\CommentTok{# Estimer Var(S(50)) avec la fonction OGIVE}
+\NormalTok{Var_Sn_}\DecValTok{50}\NormalTok{ <-}\StringTok{ }\NormalTok{\{}
+\NormalTok{    x <-}\StringTok{ }\DecValTok{50}
+\NormalTok{    ci <-}\StringTok{ }\DecValTok{40}
+\NormalTok{    cj <-}\StringTok{ }\DecValTok{57}
+\NormalTok{    alpha <-}\StringTok{ }\NormalTok{(cj}\OperatorTok{-}\NormalTok{x)}\OperatorTok{/}\NormalTok{(cj}\OperatorTok{-}\NormalTok{ci)}
+\NormalTok{    n <-}\StringTok{ }\KeywordTok{length}\NormalTok{(yi)}
+    
+\NormalTok{    var_Y <-}\StringTok{ }\NormalTok{n }\OperatorTok{*}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{2}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{2}\NormalTok{])}
+\NormalTok{    var_Z <-}\StringTok{ }\NormalTok{n }\OperatorTok{*}\StringTok{ }\NormalTok{(Estimateur_KM[}\DecValTok{2}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{3}\NormalTok{] }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{2}\NormalTok{]}
+            \OperatorTok{+}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{3}\NormalTok{]))}
+\NormalTok{    cov <-}\StringTok{ }\OperatorTok{-}\NormalTok{n }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{2}\NormalTok{]) }\OperatorTok{*}\StringTok{ }\NormalTok{(Estimateur_KM[}\DecValTok{2}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{Estimateur_KM[}\DecValTok{3}\NormalTok{])}
+    
+\NormalTok{    (var_Y}\OperatorTok{*}\NormalTok{(cj}\OperatorTok{-}\NormalTok{ci)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\NormalTok{var_Z}\OperatorTok{*}\NormalTok{(x}\OperatorTok{-}\NormalTok{ci)}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{2}\OperatorTok{*}\NormalTok{cov}\OperatorTok{*}\NormalTok{(cj}\OperatorTok{-}\NormalTok{ci)}\OperatorTok{*}\NormalTok{(x}\OperatorTok{-}\NormalTok{ci)) }\OperatorTok{/}\StringTok{ }\NormalTok{(n}\OperatorTok{*}\NormalTok{(cj}\OperatorTok{-}\NormalTok{ci))}\OperatorTok{^}\DecValTok{2}
+\NormalTok{\}}
+
+\CommentTok{# Intervalle de confiance au niveau 95% pour S(50)}
+\NormalTok{IC_KM <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(Sn_}\DecValTok{50} \OperatorTok{-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(Var_Sn_}\DecValTok{50}\NormalTok{),}
+\NormalTok{              Sn_}\DecValTok{50} \OperatorTok{+}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(Var_Sn_}\DecValTok{50}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{c) Intervalle de confiance pour
+\(S_n(50)\) avec la transformation log
+(-log)}{c) Intervalle de confiance pour S\_n(50) avec la transformation log (-log)}}\label{c-intervalle-de-confiance-pour-s_n50-avec-la-transformation-log--log-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# La valeur estimée de la fonction de survie et la variance estimée sont }
+\CommentTok{#toujours les mêmes que celles de la section b). Par conséquent, }
+\CommentTok{# seulement l'intervalle de confiance est modifié :}
+\NormalTok{u <-}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\KeywordTok{qnorm}\NormalTok{(}\FloatTok{0.975}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(Var_Sn_}\DecValTok{50}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{Sn_}\DecValTok{50} \OperatorTok{/}\StringTok{ }\KeywordTok{log}\NormalTok{(Sn_}\DecValTok{50}\NormalTok{))}
+
+\NormalTok{IC_log_KM <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(Sn_}\DecValTok{50}\OperatorTok{^}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{u),}
+\NormalTok{              Sn_}\DecValTok{50}\OperatorTok{^}\NormalTok{u)}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}
