@@ -275,14 +275,15 @@ colnames(tableau2) <- c("i", "yi", "Si", "ri", "Kaplan-Meier")
 # Déterminer l'estimateur Kaplan-Meier pour chacun des moments uniques des décès
 Estimateur_KM <- cumprod(1-Si/ri)
 
-# Publier le tableau 2 
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(tableau2, caption = "Données permettant de trouver l'estimateur Kaplan-Meier",  
-                 align = c("c", "c", "c", "c", "c", "c")) 
-
-
 ```
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=7.5cm]{tableau_kaplan.png}
+    \caption{Données permettant de trouver l'estimateur Kaplan-Meier trouver à partir de SAS}
+\end{figure}
+
+
+
 La table précèdente présente toutes les données utiles permettant de déterminer l'estimateur Kaplan-Meier. Par conséquent, il est possible de calculer cet estimateur à partir de sa définition :
 
 \begin{align*}
@@ -312,15 +313,6 @@ La table précèdente présente toutes les données utiles permettant de déterm
 
 ### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour $S_n(50)$
 ```{R, echo = FALSE, message = FALSE, warning = FALSE}
-# Graphique de la fonction de survie estimée par l'estimateur Kaplan-Meier
-library(ggplot2)
-ggplot(data = tableau2, aes(x=unlist(tableau2["yi"]),y=unlist(tableau2["Kaplan-Meier"])))+ 
-        geom_step() + 
-        ggtitle("Valeur de la fonction de survie estimée à l'aide de l'estimateur\nKaplan-Meier en fonction des temps de décès ou de retraits") + 
-        theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
-        xlab("Temps") +
-        ylab("Estimateur Kaplan-Meier")
-
 # Calculer un estimateur pour la variance de la fonction de survie à l'aide de 
 # la formule de Greenwood
 formule_Greenwood <- Estimateur_KM^2 * cumsum(Si/ri/(ri-Si))
@@ -329,46 +321,23 @@ formule_Greenwood <- Estimateur_KM^2 * cumsum(Si/ri/(ri-Si))
 # une interpolation linéaire (OGIVE) entre y_i = 40 et y_i = 57.
 
 # Estimer S(50) avec la fonction OGIVE
-Sn_50 <- {
-    x <- 50
-    ci <- 40
-    cj <- 57
-    alpha <- (cj-x)/(cj-ci)
-    
-    Estimateur_KM[2] * alpha + Estimateur_KM[3] * (1 - alpha) 
-}
+Sn_50 <- Estimateur_KM[2]
 
 # Estimer Var(S(50)) avec la fonction OGIVE
-Var_Sn_50 <- {
-    x <- 50
-    ci <- 40
-    cj <- 57
-    alpha <- (cj-x)/(cj-ci)
-    n <- length(yi)
-    
-    var_Y <- n * Estimateur_KM[2] * (1 - Estimateur_KM[2])
-    var_Z <- n * (Estimateur_KM[2] - Estimateur_KM[3] * (1 - Estimateur_KM[2]
-            + Estimateur_KM[3]))
-    cov <- -n * (1 - Estimateur_KM[2]) * (Estimateur_KM[2] - Estimateur_KM[3])
-    
-    (var_Y*(cj-ci)^2 + var_Z*(x-ci)^2 + 2*cov*(cj-ci)*(x-ci)) / (n*(cj-ci))^2
-}
+Var_Sn_50 <- formule_Greenwood[2]
 
-#Données utiles pour démarche à la main
-x <- 50
-ci <- 40
-cj <- 57
-alpha <- (cj-x)/(cj-ci)
-n <- length(yi)
 
-var_Y <- n * Estimateur_KM[2] * (1 - Estimateur_KM[2])
-var_Z <- n * (Estimateur_KM[2] - Estimateur_KM[3] * (1 - Estimateur_KM[2] + Estimateur_KM[3]))
-cov <- -n * (1 - Estimateur_KM[2]) * (Estimateur_KM[2] - Estimateur_KM[3])
 
 # Intervalle de confiance au niveau 95% pour S(50)
 IC_KM <- cbind(Sn_50 - qnorm(0.975) * sqrt(Var_Sn_50),
               Sn_50 + qnorm(0.975) * sqrt(Var_Sn_50))
 ```
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=8cm]{grahique_kaplan.png}
+    \caption{Valeur de la fonction de survie estimée à l'aide de l'estimateur Kaplan-Meier en fonction des temps de décès}
+\end{figure}
+
 
 Calculer un estimateur pour la variance de la fonction de survie à l'aide de la formule de Greenwood :
 \begin{align*}
@@ -387,70 +356,17 @@ Calculer un estimateur pour la variance de la fonction de survie à l'aide de la
     \right.
 \end{align*}
 
-Alors, en ayant les valeurs de l'estimateur Kaplan-Meier et celles de Greenwood, il est possible de déduire les intervalles de confiance au moment des décès. Toutefois, il faut déterminer l'intervalle de confiance au niveau 95% pour S(50), qui est entre deux moments de décès. Alors, il faut faire une interpolation linéaire (OGIVE) entre $y_i = 40$ et $y_i = 57$.
-
-\newpage
-La fonction de survie sous OGIVE est donnée par:
+Alors, en ayant les valeurs de l'estimateur Kaplan-Meier et celles de Greenwood, il est possible de déduire les intervalles de confiance au niveau 0.95 pour $\hat{S}_n(50)$ au moment des décès.
+Ainsi, en ayant $\hat{S}_n(50)\:$= `r Sn_50` et $\widehat{Var}(\hat{S}_n(50))\:$= `r Var_Sn_50`, il est possible d'évaluer l'intervalle de confiance au niveau de confiance 95%. 
 \begin{align*}
-    F_n^{OGIVE}(x)
-    &= (\frac{c_j-x}{c_j-c_{j-1}}) F_n(c_{j-1}) + (\frac{x-c_{j-1}}{c_j-c_{j-1}}) F_n(c_{j}) \\
-    S_n^{OGIVE}(x)
-    &= 1-F_n^{OGIVE}(x) \\
-    &= 1- (\frac{c_j-x}{c_j-c_{j-1}}) F_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) F_n(c_{j}) \\
-    &= 1 - (\frac{c_j-x}{c_j-c_{j-1}}) + (\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) + (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
-    &= 1- (\frac{(c_j-x) + (x-c_{j-1})}{c_j-c_{j-1}}) + (\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
-    &= 1-1+(\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j}) \\
-    &=(\frac{c_j-x}{c_j-c_{j-1}}) S_n(c_{j-1}) - (\frac{x-c_{j-1}}{c_j-c_{j-1}}) S_n(c_{j})
+    S_n(y_{50}) &\in \hat{S}_n(y_{50})) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(y_{50}))}\\
+S_n(y_{50}) &\in `r Sn_50` \pm z_{0.975} \sqrt{`r Var_Sn_50`} \\
+S_n(y_{50}) &\in [`r IC_KM`]
 \end{align*}
 
-Donc, dans le cas de $S_n(50)$, la fonction de survie sous OGIVE est :
-\begin{align*}
-    S_n^{OGIVE}(50)
-    &=(\frac{57-50}{57-40}) S_n(y_{40}) - (\frac{50-40}{57-40}) S_n(y_{57}) \\
-    &= `r Sn_50`
-\end{align*}
 
-L'estimer de la variance sous OGIVE est donnée par:
-\begin{align*}
-    Var(S_n^{OGIVE}(x))
-    &= \frac{(c_j-c_{j-1})^2Var(Y) + (x-c_{j-1})^2Var(Z) + 2(c_j-c_{j-1})(x-c_{j-1})Cov(Y,Z)}{(n(c_j-c_{j-1}))^2} 
-\end{align*}
-où,
-\begin{align*}
-    Var(Y)
-    &= n S_n(c_{j-1}) (1 - S_n(c_{j-1})) \\
-    Var(Z)
-    &= n (S_n(c_{j-1}) - S_n(c_{j}) (1 - S_n(c_{j-1}) + S_n(c_{j}))) \\
-    Cov(Y,Z)
-    &= -n (1 - S_n(c_{j-1})) (S_n(c_{j-1}) - S_n(c_{j}))
-\end{align*}
 
-Donc, dans le cas de $S_n(50)$, la variance de la fonction de survie sous OGIVE est :
-\begin{align*}
-    Var(Y) 
-    &= 8 S_n(y_{40}) (1 - S_n(y_{40})) = `r var_Y` \\
-    Var(Z)
-    &= 8 (S_n(y_{40}) - S_n(y_{57}) (1 - S_n(y_{40}) + S_n(y_{57}))) = `r var_Z`\\
-    Cov(Y,Z)
-    &= -8 (1 - S_n(y_{40})) (S_n(y_{40}) - S_n(y_{57})) = `r cov` \\
-    \\
-    Var(S_n^{OGIVE}(50))
-    &= \frac{(57-40)^2Var(Y) + (50-40)^2Var(Z) + 2(57-40)(50-40)Cov(Y,Z)}{(8(57-40))^2} \\
-    &= `r Var_Sn_50`
-\end{align*}
-
-\newpage
-Ainsi, en ayant $S_n(50)$ et $Var(S_n(50))$, il est possible d'évaluer l'intervalle de confiance au niveau de confiance 95%. 
-\begin{align*}
-    IC \ pour \ S_n(y_{50})
-    &: \ \hat{S}_n(y_{50})) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(y_{50}))}\\
-    &: \ `r Sn_50` \pm z_{0.975} \sqrt{`r Var_Sn_50`} \\
-    &: \ [`r IC_KM`]
-\end{align*}
-
-#Mettre un commentaire ici
-
-### c) Intervalle de confiance pour $S_n(50)$ avec la transformation log (-log)
+### c) Intervalle de confiance pour $\hat{S}_n(50)$ avec la transformation log (-log)
 ```{R echo =FALSE, eval = TRUE}
 # La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes
 # que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié :
@@ -459,16 +375,14 @@ u <- exp(qnorm(0.975) * sqrt(Var_Sn_50) / Sn_50 / log(Sn_50))
 IC_log_KM <- cbind(Sn_50^(1/u),
               Sn_50^u)
 ```
-La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log (-log) au niveau de confiance 95% est déterminé de cette façon : 
+La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log transformed au niveau de confiance 95% est déterminé de cette façon : 
 \begin{align*}
-    IC \ log \ transformed \ pour \ S_n(y_{50})
-    &: \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
+    \hat{S}_n(y_{50}) &\in  \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
     où \ u
-    &= e^{\frac{z_{0.975} \sqrt{\hat{Var}(\hat{S}_n(y_{50}))}}{\hat{S}_n(y_{50})) ln(\hat{S}_n(y_{50})))}} \\
-    &= e^{\frac{z_{0.975} \sqrt{`r Var_Sn_50`}}{`r Sn_50` ln(`r Sn_50`)}} \\
+    &= exp\left\{ \frac{z_{0.975} \sqrt{\widehat{Var}[\hat{S}_n(50)]}}{\hat{S}_n(50) \text{ln}(\hat{S}_n(50))}\right\} \\
+    &= exp\left\{\frac{z_{0.975} \sqrt{`r Var_Sn_50`}}{`r Sn_50` \cdot \text{ln}(`r Sn_50`)}\right\} \\
     \\
-    IC \ log \ transformed \ pour \ S_n(y_{50}) 
-    &: \ [`r IC_log_KM`]
+    \hat{S}_n(y_{50}) &\in [`r IC_log_KM`]
 \end{align*}
 
 # Mettre commentaire ici
