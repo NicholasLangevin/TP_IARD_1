@@ -249,7 +249,7 @@ xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chaqu
 ```
 
 ### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
-```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs du déductible d à utiliser
 d <- d[1]
 
