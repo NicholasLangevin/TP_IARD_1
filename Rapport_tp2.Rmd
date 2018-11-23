@@ -1,0 +1,276 @@
+---
+output: pdf_document
+---
+\newpage
+\begin{flushright}
+    Équipe no XX 
+\end{flushright}
+
+\begin{center}
+    \vspace{5\baselineskip}
+    Nicholas Langevin \\
+    (111 184 631) \\
+    \vspace{2\baselineskip}
+    Alexandre Turcotte \\
+    (111 172 613) \\
+    \vspace{8\baselineskip}
+    Mathématiques actuarielles IARD 1 \\
+    ACT-2005 \\
+    \vspace{8\baselineskip}
+    \textbf{Travail pratique 2} \\
+    \vspace{8\baselineskip}
+    Travail présenté à \\
+    Andrew Luong \\
+    \vspace{8\baselineskip}
+    École d’actuariat \\
+    Université Laval \\
+    Automne 2018
+\end{center}
+
+
+# Question 1
+## Méthode de vraisemblance avec données complètes
+### a) Estimation des paramètres
+
+Les données utilisées pour ce problème se trouvent dans l'annexe sous la question 1. À partir de ces données, il a été possible d'estimer les paramètres $\mu$ et $\sigma$ d'une loi log normale à partir de la méthode de vraisemblance, car le jeu de données donne de l'information sur la distribution de $X$, soit $f_X(x)$, $S_X(x)$ et $F_X(x)$. Les étapes à suivrent sont donc les suivantes :
+
+\begin{itemize}
+    \item[{\textbullet}] Déterminer la fonction $g(X,\mu,\sigma)$. \\ 
+    \item[{\textbullet}] Appliquer la vraisemblance $L(\theta) = \prod_{i=1}^n g(X,\mu, \sigma)$ \\
+    \item[{\textbullet}] Appliquer la log vraisemblance $l(\theta) = In(L(\theta)) = In(\prod_{i=1}^n g(X,\mu, \sigma))$ \\
+    \item[{\textbullet}] Dériver selon $\mu$ : $\frac{d}{d\mu}l(\theta)$\\
+    \item[{\textbullet}] Dériver selon $\sigma$ : $\frac{d}{d\sigma}l(\theta)$\\
+    \item[{\textbullet}] Isoler les paramètres \\
+\end{itemize}
+
+Mettre chacune des étapes intermédiaires + calculs + SAS surment
+Mettre le code dans l'annexe
+
+Les estimateurs de la loi log normale, selon la méthode de vraisemblance, sont $\hat{\mu}$ = ???? et $\hat{\sigma}$ = ????.
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+data <-  c(1500, 6000, 3500, 3800, 1800, 5500, 4800, 4200, 3900, 3000)
+
+data
+```
+
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Les estimateurs ont été calculés à l'aide de SAS
+Estimateurs <- data.frame("mu" =8.1618, "sigma" = 0.4278)
+
+# Présenter les estimateurs dans un tableau
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 4, 4)) 
+```
+
+
+
+
+### b) Détermination des primes stop-loss
+En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connu. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000 (accroissement par tranche de 100).
+
+
+il faut faire une intégrale -- méthode analytique
+
+Expliquer un peu la démarche et mettre résultats au fur à mesure ici
+
+Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
+
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Les estimateurs ont été calculés à l'aide de SAS en a)
+mu <- 8.1618
+sigma <-  0.4278
+
+# Valeurs des déductibles d à utiliser
+d <- 100 * seq(20,30)
+
+# Calculer les primes STOP-LOSS pour les différents déductibles d
+STOP_LOSS <- function(x) {
+    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+
+# Présenter les valeurs des primes STOP-LOSS en fonction de d 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chaque déductible d donnée",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### c) Détermination des primes limited loss
+Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer les primes limited loss, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000 (accroissement par tranche de 100).
+
+Expliquer un peu la démarche et mettre résultats au fur à mesure ici
+
+Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs des limites u à utiliser
+u <- 100 * seq(30,40)
+
+# Calculer l'espérance limitée pour les différents limites u
+Esp_limite <- function(x) {
+    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+
+# Présenter les valeurs des espérances limitées en fonction de u
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
+Il est également possible d'approximer la prime stop-loss par simulation. Alors, il est possible de tirer un échantillon de loi log-normale suffisament grand pour estimer la prime stop-loss. Cela a été fait avec un m = 100 000, 500 000 et 1 000 000. 
+
+commentaire et comparaison avec b)
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs du déductible d à utiliser
+d <- d[1]
+
+# Nombre de simulations
+m <- c(1e5, 5e5, 1e6)
+
+# Simuler un échantillon de m simulations de la log log-normale
+# avec les paramètres estimés en a)
+simul <- function(x) rlnorm(x, meanlog = mu, sdlog = sigma)
+simulation <- sapply(1:3, function(i) simul(m[i]))
+
+# Approximer la prime STOP-LOSS ayant un déductible de 2000 par simulation
+approximation <- sapply(1:3, function(x)
+                    mean(sapply(1:m[x], function(i) 
+                        max(0, simulation[[x]][i] - 2000))))
+
+approx <- data.frame(m, approximation)
+# Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS ayant un déductible de 2000",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+\newpage
+# Annexe
+# Question 1
+### a) Estimation des paramètres 
+```{R, echo = TRUE, eval = FALSE}
+# Données utilisées afin de compléter le numéro 1 
+
+data <-  c(1500, 6000, 3500, 3800, 1800, 5500, 4800, 4200, 3900, 3000)
+```
+\vspace{1\baselineskip}
+```{R, echo = FALSE, eval = TRUE}
+data 
+```
+\vspace{1\baselineskip}
+```{R eval=FALSE}
+# Code SAS permettant d'estimer les paramètres de la loi log-normale 
+#par la méthode du maximum de vraisemblance
+
+data MLE;
+input t cens;
+datalines;
+1500 1
+6000 1
+3500 1
+3800 1
+1800 1
+5500 1
+4800 1
+4200 1
+3900 1
+3000 1
+;
+run;
+
+proc lifereg data=MLE;
+	Model t*cens(0)= /covb dist=lnormal;
+run;
+```
+
+### b) Détermination des primes stop-loss
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Les estimateurs ont été calculés à l'aide de SAS en a)
+mu <- 8.1618
+sigma <-  0.4278
+
+# Valeurs des déductibles d à utiliser
+d <- 100 * seq(20,30)
+
+# Calculer les primes STOP-LOSS pour les différents déductibles d
+STOP_LOSS <- function(x) {
+    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+
+# Présenter les valeurs des primes STOP-LOSS en fonction de d 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chaque déductible d donnée",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### c) Détermination des primes limited loss
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs des limites u à utiliser
+u <- 100 * seq(30,40)
+
+# Calculer l'espérance limitée pour les différents limites u
+Esp_limite <- function(x) {
+    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+
+# Présenter les valeurs des espérances limitées en fonction de u
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs du déductible d à utiliser
+d <- d[1]
+
+# Nombre de simulations
+m <- c(1e5, 5e5, 1e6)
+
+# Simuler un échantillon de m simulations de la log log-normale
+# avec les paramètres estimés en a)
+simul <- function(x) rlnorm(x, meanlog = mu, sdlog = sigma)
+simulation <- sapply(1:3, function(i) simul(m[i]))
+
+# Approximer la prime STOP-LOSS ayant un déductible de 2000 par simulation
+approximation <- sapply(1:3, function(x)
+                    mean(sapply(1:m[x], function(i) 
+                        max(0, simulation[[x]][i] - 2000))))
+
+approx <- data.frame(m, approximation)
+# Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS ayant un déductible de 2000",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
