@@ -27,59 +27,113 @@ output: pdf_document
     Automne 2018
 \end{center}
 
-
+\newpage
 # Question 1
 ## Méthode de vraisemblance avec données complètes
 ### a) Estimation des paramètres
 
-Les données utilisées pour ce problème se trouvent dans l'annexe sous la question 1. À partir de ces données, il a été possible d'estimer les paramètres $\mu$ et $\sigma$ d'une loi log normale à partir de la méthode de vraisemblance, car le jeu de données donne de l'information sur la distribution de $X$, soit $f_X(x)$, $S_X(x)$ et $F_X(x)$. Les étapes à suivrent sont donc les suivantes :
-
-\begin{itemize}
-    \item[{\textbullet}] Déterminer la fonction $g(X,\mu,\sigma)$. \\ 
-    \item[{\textbullet}] Appliquer la vraisemblance $L(\theta) = \prod_{i=1}^n g(X,\mu, \sigma)$ \\
-    \item[{\textbullet}] Appliquer la log vraisemblance $l(\theta) = In(L(\theta)) = In(\prod_{i=1}^n g(X,\mu, \sigma))$ \\
-    \item[{\textbullet}] Dériver selon $\mu$ : $\frac{d}{d\mu}l(\theta)$\\
-    \item[{\textbullet}] Dériver selon $\sigma$ : $\frac{d}{d\sigma}l(\theta)$\\
-    \item[{\textbullet}] Isoler les paramètres \\
-\end{itemize}
-
-Mettre chacune des étapes intermédiaires + calculs + SAS surment
-Mettre le code dans l'annexe
-
-Les estimateurs de la loi log normale, selon la méthode de vraisemblance, sont $\hat{\mu}$ = ???? et $\hat{\sigma}$ = ????.
+Le jeu de données utilisé afin de compléter ce numéro comportait les 10 données suivantes :
+\vspace{1\baselineskip}
+\begin{center}
+ 1500 \ 6000 \ 3500 \ 3800 \ 1800 \ 5500 \ 4800 \ 4200 \ 3900 \ 3000
+\end{center}
+\vspace{1\baselineskip}
+À partir de ces données et de SAS, il a été possible d'estimer les paramètres $\hat{\mu}$ et $\hat{\sigma}$ d'une loi log-normale à partir de la méthode du maximum de vraisemblance. D'ailleurs, le code SAS se trouve dans l'Annexe à la fin du rapport. Voici, les estimés des paramètres obtenus: 
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Les données
 data <-  c(1500, 6000, 3500, 3800, 1800, 5500, 4800, 4200, 3900, 3000)
 
-data
-```
-
-
-```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS
 Estimateurs <- data.frame("mu" =8.1618, "sigma" = 0.4278)
 
 # Présenter les estimateurs dans un tableau
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 4, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 4, 4)) 
 ```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+  \bf $\bf{\hat{\mu}}$ & \bf $\hat{\sigma}$ \\ 
+  \hline
+  8.1618 & 0.4278 \\ 
+  \hline
+\end{tabular}
+\caption{Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance}
+\end{table}
+
+\vspace{1\baselineskip}
+Il est également possible de déterminer les estimateurs de façon théorique. D'abord, il faut déterminer la fonction $g(x_i;\mu, \sigma)$ pour les dix scénarios, et ce, en fonction de la densité de X.
+\vspace{1\baselineskip}
+
+Alors comme $X \sim LN(\mu, \sigma)$, la densité de f(x) est la suivante :
+\begin{align*}
+    f_x(x) = \frac{1}{\sqrt{2\pi}x\sigma}e^{\frac{-1}{2} \left(\frac{In(x)-\mu}{\sigma} \right)^2}  \\
+\end{align*}
+
+Ensuite, il faut appliquer la vraisemblance en tenant compte des 10 scénarios et de la densité de X.
+\begin{align*}
+    \L(\mu, \sigma) 
+    &= \prod_{i=1}^{10}g(x_i;\mu,\sigma) \\
+    \\
+    &= f_x(1500) \cdot f_x(6000) \cdot ... \cdot f_x(3000) \\
+    \\
+    &= \left[ \frac{1}{\sqrt{2\pi}1500\sigma}e^{\frac{-1}{2}(\frac{In(1500)-\mu}{\sigma})^2} \right] \cdot \left[         \frac{1}{\sqrt{2\pi}6000\sigma}e^{\frac{-1}{2}(\frac{In(6000)-\mu}{\sigma})^2} \right] \cdot ... \cdot \left[         \frac{1}{\sqrt{2\pi}3000\sigma}e^{\frac{-1}{2}(\frac{In(3000)-\mu}{\sigma})^2} \right] \\
+    \\
+    &= \left(\frac{1}{2\pi} \right)^5 \left(\frac{1}{\sigma} \right)^{10} \left(\frac{1}{2.795153962 \times 10^{35}} \right) e^{\frac{-1}{2\sigma^2} \left[(In(1500) - \mu)^2 + (In(6000) - \mu)^2 + ... + (In(3000) - \mu)^2 \right]} \\
+\end{align*}
+
+\newpage
+Par la suite, il faut appliquer la log vraisemblance.
+\begin{align*}
+    \l(\mu, \sigma) 
+    &= In(L(\mu, \sigma)) = In \prod_{i=1}^{10}g(x_i; \mu, \sigma) \\
+    &= -5In(2\pi) - 10In(\sigma) - In(2.795153962 \times 10^{35}) \\ 
+    &- \frac{1}{2\sigma^2} \left[(In(1500) - \mu)^2 + (In(6000) - \mu)^2 + ... + (In(3000) - \mu)^2 \right] \\
+\end{align*}
+
+Finalement, il faut dériver la log vraisemblance selon les deux paramètres et égaliser les deux équations à 0 pour pouvoir estimer les paramètres en les isolant.
+
+Dériver selon $\mu$
+\begin{align*}
+    \frac{d}{d\mu}l(\mu, \sigma) 
+    &= \frac{-1}{2\sigma^2} \left[-2(In(1500) - \mu) -2(In(6000) - \mu) - ... -2(In(3000) - \mu) \right] \\
+    \ 0 
+    &= \frac{1}{\hat{\sigma}^2} \left[In(1500) + In(6000) + ... + In(3000) - 10\hat{\mu} \right] \\
+    \ \hat{\mu}
+    &= \frac{1}{10}\sum_{i=1}^{10} In(x_i) \ = \ 8.161836544 \\
+\end{align*}
+
+Dériver selon $\sigma$
+\begin{align*}
+    \frac{d}{d\sigma}l(\mu, \sigma) 
+    &= \frac{-10}{\sigma} + \frac{1}{\sigma^3} \sum_{i=1}^{10} (In(x_i) - \mu)^2 \\
+    \ 0
+    &= \frac{-10}{\hat{\sigma}} + \frac{1}{\hat{\sigma}^3} \sum_{i=1}^{10} (In(x_i) - \hat{\mu})^2 \\
+    \ \hat{\sigma}^2
+    &= \frac{1}{10}\sum_{i=1}^{10} (In(x_i) - 8.161836544)^2 \ = \ 0.1830137502 \\
+    \ \hat{\sigma}
+    &= \sqrt{\hat{\sigma}^2} \ = \ 0.427801064\\
+\end{align*}
+
+Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vraisemblance, sont $\hat{\mu}$ = `r Estimateurs[1]` et $\hat{\sigma}$ = `r Estimateurs[2]`.
 
 
 
-
+\newpage
 ### b) Détermination des primes stop-loss
-En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connu. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000 (accroissement par tranche de 100).
+En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connue. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000 (accroissement par tranche de 100). Pour y arriver, il faut utiliser la formule suivante:
 
+\begin{align*}
+    \ E \left[ (X-d)_{+} \right] 
+    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \left(1 - \Phi \left(\frac{Ind - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) \right) - d \left(1 - \Phi \left(\frac{Ind - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
+\end{align*}
 
-il faut faire une intégrale -- méthode analytique
-
-Expliquer un peu la démarche et mettre résultats au fur à mesure ici
-
-Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
-
+où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et d = déductible. Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS en a)
@@ -98,19 +152,61 @@ STOP_LOSS <- function(x) {
 Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
 
 # Présenter les valeurs des primes STOP-LOSS en fonction de d 
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chaque déductible d donnée",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chacun des déductibles d donnés",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 0, 4)) 
+```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{d} & \bf{Prime Stop-Loss} \\ 
+  \hline
+  2000 & 253.3579 \\ 
+  2100 & 236.1653 \\ 
+  2200 & 220.3997 \\ 
+  2300 & 205.9213 \\ 
+  2400 & 192.6061 \\ 
+  2500 & 180.3436 \\ 
+  2600 & 169.0355 \\ 
+  2700 & 158.5939 \\ 
+  2800 & 148.9402 \\ 
+  2900 & 140.0041 \\ 
+  3000 & 131.7223 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de la prime Stop-Loss pour chacun des déductibles d donnés} 
+\end{table}
+
+À partir des valeurs du tableau 2, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le premier graphique de la figure 1, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le second graphique de la figure 1, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Par exemple, l'écart entre 2000 et 2100 est plus important que l'écart entre 2900 et 3000. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser. Par conséquent, le niveau de la prime devrait diminuer.
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Représenter graphiquement l'évalution en fonction de d
+library(ggplot2)
+plot1 <- ggplot(data = Primes_STOP_LOSS, aes(x= Primes_STOP_LOSS$d, y = Primes_STOP_LOSS$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime Stop-Loss") +ggtitle("Prime Stop-Loss en fonction de d") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test <- data.frame(d=(100 * seq(20,60)), "Prime" = sapply((100 * seq(20,60)), function(x) STOP_LOSS(x)))
+
+plot2 <- ggplot(data=value_test, aes(x=value_test$d, y=value_test$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime Stop-Loss") +ggtitle("Prime Stop-Loss en fonction de d") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+
+library(gridExtra)
+grid.arrange(plot1, plot2, ncol=2, nrow=1)
 ```
 
+
+
 ### c) Détermination des primes limited loss
-Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer les primes limited loss, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000 (accroissement par tranche de 100).
+Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer les primes limited loss, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000 (accroissement par tranche de 100). Pour y arriver, il faut utiliser la formule suivante:
 
-Expliquer un peu la démarche et mettre résultats au fur à mesure ici
+\begin{align*}
+    \ E \left[X \Lambda u \right] 
+    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \Phi \left(\frac{Inu - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) + u \left(1 - \Phi \left(\frac{Inu - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
+\end{align*}
 
-Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
+où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et u = limite. Par conséquent, les valeurs obtenues pour la prime limitée sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs des limites u à utiliser
@@ -127,13 +223,22 @@ Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)
 # Présenter les valeurs des espérances limitées en fonction de u
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
 ```
 
+
+Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
+
+
 ### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
 Il est également possible d'approximer la prime stop-loss par simulation. Alors, il est possible de tirer un échantillon de loi log-normale suffisament grand pour estimer la prime stop-loss. Cela a été fait avec un m = 100 000, 500 000 et 1 000 000. 
+
+\begin{align*}
+    \ E \left[ (X-2000)_{+} \right] 
+    &= \frac{1}{m}\sum_{i=1}^{m} max(0, X-2000) \\
+\end{align*}
 
 commentaire et comparaison avec b)
 
@@ -181,7 +286,73 @@ xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'a
                  digits = c(0, 4, 4)) 
 ```
 
+### b) Détermination des primes stop-loss
 
+\begin{align*}
+    \ E \left[ (X-d)_{+} \right] 
+    &= e^{\mu+\frac{\sigma^2}{2}} \left(1 - \Phi \left(\frac{Ind - \mu - \sigma^2}{\sigma} \right) \right) - d \left(1 - \Phi \left(\frac{Ind - \mu}{\sigma} \right) \right)\\
+\end{align*}
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Les estimateurs ont été calculés à l'aide de SAS en a)
+mu <- 6.8418
+sigma <-  0.8278
+
+# Valeurs des déductibles d à utiliser
+d <- 100 * seq(20,30)
+
+# Calculer les primes STOP-LOSS pour les différents déductibles d
+STOP_LOSS <- function(x) {
+    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+
+# Présenter les valeurs des primes STOP-LOSS en fonction de d 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chacun des déductibles d donnés",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### c) Détermination des primes limited loss
+
+\begin{align*}
+    \ E \left[X \Lambda u \right] 
+    &= e^{\mu+\frac{\sigma^2}{2}} \Phi \left(\frac{Ind - \mu - \sigma^2}{\sigma} \right) + d \left(1 - \Phi \left(\frac{Ind - \mu}{\sigma} \right) \right)\\
+\end{align*}
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs des limites u à utiliser
+u <- 100 * seq(30,40)
+
+# Calculer l'espérance limitée pour les différents limites u
+Esp_limite <- function(x) {
+    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+
+# Présenter les valeurs des espérances limitées en fonction de u
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+# Question 3
+## Estimateur de Bayes
+### a) Estimation du paramètre $\theta$
+
+### b) Présentation graphique de la loi beta a priori
+
+### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes
+
+### d) Approximation de l'estimateur de Bayes par simulation
 
 \newpage
 # Annexe
@@ -199,7 +370,7 @@ data
 \vspace{1\baselineskip}
 ```{R eval=FALSE}
 # Code SAS permettant d'estimer les paramètres de la loi log-normale 
-#par la méthode du maximum de vraisemblance
+# par la méthode du maximum de vraisemblance
 
 data MLE;
 input t cens;
@@ -242,7 +413,8 @@ Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
 # Présenter les valeurs des primes STOP-LOSS en fonction de d 
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chaque déductible d donnée",  
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour 
+                 chacun des déductibles d donnés",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
 ```
@@ -252,7 +424,7 @@ xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chaque d�
 # Valeurs des limites u à utiliser
 u <- 100 * seq(30,40)
 
-# Calculer l'espérance limitée pour les différents limites u
+# Calculer l'espérance limitée pour les différentes limites u
 Esp_limite <- function(x) {
     exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
         x * (1 - pnorm((log(x) - mu)/sigma))
@@ -263,7 +435,8 @@ Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)
 # Présenter les valeurs des espérances limitées en fonction de u
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour 
+                 chacune des limites u données",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
 ```
@@ -287,10 +460,12 @@ approximation <- sapply(1:3, function(x)
                         max(0, simulation[[x]][i] - 2000))))
 
 approx <- data.frame(m, approximation)
+
 # Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS ayant un déductible de 2000",  
+xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS 
+                 ayant un déductible de 2000",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
 ```
@@ -346,3 +521,59 @@ proc lifereg data=donnees;
 run;
 ```
 
+### b) Détermination des primes stop-loss
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Les estimateurs ont été calculés à l'aide de SAS en a)
+mu <- 6.8418
+sigma <-  0.8278
+
+# Valeurs des déductibles d à utiliser
+d <- 100 * seq(20,30)
+
+# Calculer les primes STOP-LOSS pour les différents déductibles d
+STOP_LOSS <- function(x) {
+    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+
+# Présenter les valeurs des primes STOP-LOSS en fonction de d 
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour 
+                 chacun des déductibles d donnés",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+### c) Détermination des primes limited loss
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Valeurs des limites u à utiliser
+u <- 100 * seq(30,40)
+
+# Calculer l'espérance limitée pour les différentes limites u
+Esp_limite <- function(x) {
+    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
+        x * (1 - pnorm((log(x) - mu)/sigma))
+}
+
+Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+
+# Présenter les valeurs des espérances limitées en fonction de u
+library(xtable)
+options(xtable.comment = FALSE)
+xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour 
+                 chacune des limites u données",  
+                 align = c("c", "c", "c"),
+                 digits = c(0, 0, 4)) 
+```
+
+# Question 3
+### a) Estimation du paramètre $\theta$
+
+### b) Présentation graphique de la loi beta a priori
+
+### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes
+
+### d) Approximation de l'estimateur de Bayes par simulation
