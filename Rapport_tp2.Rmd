@@ -126,7 +126,7 @@ Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vra
 
 \newpage
 ### b) Détermination des primes stop-loss
-En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connue. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000 (accroissement par tranche de 100). Pour y arriver, il faut utiliser la formule suivante:
+En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connue. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[ (X-d)_{+} \right] 
@@ -162,7 +162,7 @@ Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
 \centering
 \begin{tabular}{cc}
   \hline
- \bf{d} & \bf{Prime Stop-Loss} \\ 
+ \bf{d} & \bf{Prime stop-loss} \\ 
   \hline
   2000 & 253.3579 \\ 
   2100 & 236.1653 \\ 
@@ -177,29 +177,25 @@ Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
   3000 & 131.7223 \\ 
    \hline
 \end{tabular}
-\caption{Valeurs de la prime Stop-Loss pour chacun des déductibles d donnés} 
+\caption{Valeurs de la prime stop-loss pour chacun des déductibles d donnés} 
 \end{table}
 
-À partir des valeurs du tableau 2, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le premier graphique de la figure 1, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le second graphique de la figure 1, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Par exemple, l'écart entre 2000 et 2100 est plus important que l'écart entre 2900 et 3000. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser. Par conséquent, le niveau de la prime devrait diminuer.
+À partir des valeurs du tableau 2, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le graphique (A) de la figure 1, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le graphique (B) de la figure 1, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Par exemple, l'écart entre 2000 et 2100 est plus important que l'écart entre 2900 et 3000. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser. Par conséquent, le niveau de la prime devrait diminuer, et ce, avec un impact de moins en moins significatif, car la valeur ajoutée d'augmenter le déductible pour la compagnie est de moins en moins importante.
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Représenter graphiquement l'évalution en fonction de d
 library(ggplot2)
-plot1 <- ggplot(data = Primes_STOP_LOSS, aes(x= Primes_STOP_LOSS$d, y = Primes_STOP_LOSS$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime Stop-Loss") +ggtitle("Prime Stop-Loss en fonction de d") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+plot1 <- ggplot(data = Primes_STOP_LOSS, aes(x= Primes_STOP_LOSS$d, y = Primes_STOP_LOSS$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") +ggtitle("(A)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 
 value_test <- data.frame(d=(100 * seq(20,60)), "Prime" = sapply((100 * seq(20,60)), function(x) STOP_LOSS(x)))
 
-plot2 <- ggplot(data=value_test, aes(x=value_test$d, y=value_test$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime Stop-Loss") +ggtitle("Prime Stop-Loss en fonction de d") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
-
-
-library(gridExtra)
-grid.arrange(plot1, plot2, ncol=2, nrow=1)
+plot2 <- ggplot(data=value_test, aes(x=value_test$d, y=value_test$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") +ggtitle("(B)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 ```
 
 
 
 ### c) Détermination des primes limited loss
-Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer les primes limited loss, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000 (accroissement par tranche de 100). Pour y arriver, il faut utiliser la formule suivante:
+Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[X \Lambda u \right] 
@@ -221,27 +217,63 @@ Esp_limite <- function(x) {
 Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
 
 # Présenter les valeurs des espérances limitées en fonction de u
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 0, 4)) 
 ```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{u} & \bf{Espérance limitée} \\ 
+  \hline
+  3000 & 1187.0103 \\ 
+  3100 & 1194.6945 \\ 
+  3200 & 1201.8320 \\ 
+  3300 & 1208.4691 \\ 
+  3400 & 1214.6471 \\ 
+  3500 & 1220.4038 \\ 
+  3600 & 1225.7731 \\ 
+  3700 & 1230.7858 \\ 
+  3800 & 1235.4700 \\ 
+  3900 & 1239.8511 \\ 
+  4000 & 1243.9524 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de l'espérance limitée pour chacune des limites u données} 
+\end{table}
+
+À partir des valeurs du tableau 3, il est possible d'observer une hausse du niveau de la prime lorsque la limite augmente. De plus, en regardant le graphique (C) de la figure 1, il est possible d'observer cette croissance. D'ailleurs, en regardant le graphique (D) de la figure 1, ayant un plus grand nombre de valeurs u, on remarque la concavité de la courbe, ce qui signifie que plus u augmente, moins l'augmentation est significative. Bref, cela fait du sens puisqu'en ayant une limite plus faible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser puisqu'elle ne payera pas ce qui a en excédent. Par conséquent, le niveau de la prime devrait augmenter plus la limite est grande, car elle devrait débourser de plus grande somme, et ce, avec un impact de moins en moins significatif, car, à un certain point, le fait d'augmenter la limite va affecter peu de gens, donc la hausse des sommes à débourser sera moins importante.
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Représenter graphiquement l'évalution en fonction de d
+library(ggplot2)
+plot3 <- ggplot(data = Primes_Esp_limite, aes(x= Primes_Esp_limite$u, y = Primes_Esp_limite$Prime)) + geom_point() + geom_line() + xlab("u") + ylab("Espérance limitée") +ggtitle("(C)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_2 <- data.frame(u=(100 * seq(30,60)), "Prime" = sapply((100 * seq(30,60)), function(x) Esp_limite(x)))
+
+plot4 <- ggplot(data=value_test_2, aes(x=value_test_2$u, y=value_test_2$Prime)) + geom_point() + geom_line() + xlab("u") + ylab(" Espérance limitée") +ggtitle("(D)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 
 
-Mettre commentaires (impact d'augmenter d, probalblement que la prime va diminuer)
+library(gridExtra)
+grid.arrange(plot1, plot2, plot3, plot4, ncol=2, nrow=2)
+```
+\begin{center}
+ Figure 1 : (A) et (B) Représentation graphique de la prime stop-loss en fonction de d. (C) et (D) Représentation graphique de l'espérance limitée en fonction de u. Toutefois, l'étendu des valeurs sur l'axe des abscisses est plus importante pour les graphiques (B) et (D) afin de mieux discerner la tendance.
+\end{center}
 
 
 ### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
-Il est également possible d'approximer la prime stop-loss par simulation. Alors, il est possible de tirer un échantillon de loi log-normale suffisament grand pour estimer la prime stop-loss. Cela a été fait avec un m = 100 000, 500 000 et 1 000 000. 
+Il est également possible d'approximer la prime stop-loss par simulation. Alors, il est possible de tirer un échantillon de la loi log-normale suffisament grand pour estimer la prime stop-loss. Cela a été fait avec un m = 100 000, 500 000 et 1 000 000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[ (X-2000)_{+} \right] 
     &= \frac{1}{m}\sum_{i=1}^{m} max(0, X-2000) \\
 \end{align*}
 
-commentaire et comparaison avec b)
-
+Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs du déductible d à utiliser
 d <- d[1]
@@ -261,37 +293,91 @@ approximation <- sapply(1:3, function(x)
 
 approx <- data.frame(m, approximation)
 # Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS ayant un déductible de 2000",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS ayant un déductible de 2000",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 0, 4)) 
 ```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{m} & \bf{approximation} \\ 
+  \hline
+  100000 & 254.4107 \\ 
+  500000 & 253.3894 \\ 
+  1000000 & 253.4287 \\ 
+  \hline
+\end{tabular}
+\caption{Valeurs approximées par simulations de la prime stop-loss ayant un déductible de 2000} 
+\end{table}
 
+La valeur de la prime stop-loss calculée en b) pour un déductible de 2000 est de 253.3579. Puis, en regardant les résultats obtenus à l'aide de la simulation, on se rend compte que ceux-ci sont très près de la valeur théorique. En effet, les écarts relatifs sont de 0.42%, 0.012% et 0.028%. Par conséquent, l'approximation est très précise et donne sensiblement la même valeur que la valeur théorique.
 
 
 # Question 2
 ## Méthode de vraisemblance avec données groupées
 ### a) Estimation des paramètres
 
+Le jeu de données utilisé afin de compléter ce numéro comportait les 10 données suivantes :
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{Intervalles} & \bf{nombres} \\ 
+  \hline
+  0-250 & 3 \\ 
+  250-500 & 4 \\ 
+  500-750 & 5 \\
+  750-1000 & 5 \\ 
+  1000-1250 & 4 \\ 
+  1250-1500 & 3 \\ 
+  1500-2000 & 3 \\
+  2000-2500 & 3 \\
+  2500-3000 & 2 \\
+  3000-5000 & 2 \\
+  \hline
+\end{tabular}
+\caption{Jeux de données de la question 2} 
+\end{table}
+À partir de ces données et de SAS, il a été possible d'estimer les paramètres $\hat{\mu}$ et $\hat{\sigma}$ d'une loi log-normale à partir de la méthode du maximum de vraisemblance. D'ailleurs, le code SAS se trouve dans l'Annexe à la fin du rapport. Voici, les estimés des paramètres obtenus: 
+
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS
 Estimateurs <- data.frame("mu" =6.8418, "sigma" = 0.8278)
 
 # Présenter les estimateurs dans un tableau
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 4, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 4, 4)) 
 ```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ $\hat{\mu}$ & $\hat{\sigma}$ \\ 
+  \hline
+  6.8418 & 0.8278 \\ 
+  \hline
+\end{tabular}
+\caption{Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance} 
+\end{table}
+
+Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vraisemblance, sont $\hat{\mu}$ = `r Estimateurs[1]` et $\hat{\sigma}$ = `r Estimateurs[2]`.
+
 
 ### b) Détermination des primes stop-loss
+En ayant obtenu les estimés des paramètres à la question a), il est maintenant possible d'effectuer divers calculs puisque la distribution du modèle est maintenant connue. Par conséquent, il est possible de calculer la prime stop-loss $E[(X-d)_+]$, et ce, pour différentes valeurs de déductible, soit d = 2000, 2100, ..., 3000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[ (X-d)_{+} \right] 
-    &= e^{\mu+\frac{\sigma^2}{2}} \left(1 - \Phi \left(\frac{Ind - \mu - \sigma^2}{\sigma} \right) \right) - d \left(1 - \Phi \left(\frac{Ind - \mu}{\sigma} \right) \right)\\
+    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \left(1 - \Phi \left(\frac{Ind - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) \right) - d \left(1 - \Phi \left(\frac{Ind - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
 \end{align*}
+
+où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et d = déductible. Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS en a)
@@ -318,11 +404,14 @@ xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chacun de
 ```
 
 ### c) Détermination des primes limited loss
+Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[X \Lambda u \right] 
-    &= e^{\mu+\frac{\sigma^2}{2}} \Phi \left(\frac{Ind - \mu - \sigma^2}{\sigma} \right) + d \left(1 - \Phi \left(\frac{Ind - \mu}{\sigma} \right) \right)\\
+    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \Phi \left(\frac{Inu - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) + u \left(1 - \Phi \left(\frac{Inu - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
 \end{align*}
+
+où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et u = limite. Par conséquent, les valeurs obtenues pour la prime limitée sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs des limites u à utiliser
