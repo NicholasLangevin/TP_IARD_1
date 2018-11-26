@@ -164,23 +164,23 @@ Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
   \hline
  \bf{d} & \bf{Prime stop-loss} \\ 
   \hline
-  2000 & 253.3579 \\ 
-  2100 & 236.1653 \\ 
-  2200 & 220.3997 \\ 
-  2300 & 205.9213 \\ 
-  2400 & 192.6061 \\ 
-  2500 & 180.3436 \\ 
-  2600 & 169.0355 \\ 
-  2700 & 158.5939 \\ 
-  2800 & 148.9402 \\ 
-  2900 & 140.0041 \\ 
-  3000 & 131.7223 \\ 
+  2000 & 1872.5736 \\ 
+  2100 & 1783.0847 \\ 
+  2200 & 1695.7633 \\ 
+  2300 & 1610.7845 \\ 
+  2400 & 1528.3012 \\ 
+  2500 & 1448.4425 \\ 
+  2600 & 1371.3131 \\ 
+  2700 & 1296.9934 \\ 
+  2800 & 1225.5400 \\ 
+  2900 & 1156.9871 \\ 
+  3000 & 1091.3484 \\ 
    \hline
 \end{tabular}
 \caption{Valeurs de la prime stop-loss pour chacun des déductibles d donnés} 
 \end{table}
 
-À partir des valeurs du tableau 2, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le graphique (A) de la figure 1, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le graphique (B) de la figure 1, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Par exemple, l'écart entre 2000 et 2100 est plus important que l'écart entre 2900 et 3000. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser. Par conséquent, le niveau de la prime devrait diminuer, et ce, avec un impact de moins en moins significatif, car la valeur ajoutée d'augmenter le déductible pour la compagnie est de moins en moins importante.
+À partir des valeurs de la $\it{Table \ 2}$, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le graphique (A) de la $\it{Figure \ 1}$, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le graphique (B) de la $\it{Figure \ 1}$, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Par exemple, l'écart entre 2000 et 2100 est plus important que l'écart entre 2900 et 3000. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser. Par conséquent, le niveau de la prime devrait diminuer, et ce, avec un impact de moins en moins significatif, car la valeur ajoutée d'augmenter le déductible pour la compagnie est de moins en moins importante.
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Représenter graphiquement l'évalution en fonction de d
@@ -194,15 +194,15 @@ plot2 <- ggplot(data=value_test, aes(x=value_test$d, y=value_test$Prime)) + geom
 
 
 
-### c) Détermination des primes limited loss
-Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
+### c) Détermination de l'espérance limitée
+Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieures, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
     \ E \left[X \Lambda u \right] 
-    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \Phi \left(\frac{Inu - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) + u \left(1 - \Phi \left(\frac{Inu - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
+    &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \Phi \left(\frac{In(u) - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) + u \left(1 - \Phi \left(\frac{In(u) - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
 \end{align*}
 
-où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et u = limite. Par conséquent, les valeurs obtenues pour la prime limitée sont les suivantes:
+où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et u = limite. Par conséquent, les valeurs obtenues pour l'espérance limitée sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs des limites u à utiliser
@@ -229,23 +229,23 @@ Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)
   \hline
  \bf{u} & \bf{Espérance limitée} \\ 
   \hline
-  3000 & 1187.0103 \\ 
-  3100 & 1194.6945 \\ 
-  3200 & 1201.8320 \\ 
-  3300 & 1208.4691 \\ 
-  3400 & 1214.6471 \\ 
-  3500 & 1220.4038 \\ 
-  3600 & 1225.7731 \\ 
-  3700 & 1230.7858 \\ 
-  3800 & 1235.4700 \\ 
-  3900 & 1239.8511 \\ 
-  4000 & 1243.9524 \\ 
+  3000 & 2748.9541 \\ 
+  3100 & 2811.6843 \\ 
+  3200 & 2871.5287 \\ 
+  3300 & 2928.5251 \\ 
+  3400 & 2982.7242 \\ 
+  3500 & 3034.1882 \\ 
+  3600 & 3082.9884 \\ 
+  3700 & 3129.2039 \\ 
+  3800 & 3172.9195 \\ 
+  3900 & 3214.2249 \\ 
+  4000 & 3253.2129 \\ 
    \hline
 \end{tabular}
 \caption{Valeurs de l'espérance limitée pour chacune des limites u données} 
 \end{table}
 
-À partir des valeurs du tableau 3, il est possible d'observer une hausse du niveau de la prime lorsque la limite augmente. De plus, en regardant le graphique (C) de la figure 1, il est possible d'observer cette croissance. D'ailleurs, en regardant le graphique (D) de la figure 1, ayant un plus grand nombre de valeurs u, on remarque la concavité de la courbe, ce qui signifie que plus u augmente, moins l'augmentation est significative. Bref, cela fait du sens puisqu'en ayant une limite plus faible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser puisqu'elle ne payera pas ce qui a en excédent. Par conséquent, le niveau de la prime devrait augmenter plus la limite est grande, car elle devrait débourser de plus grande somme, et ce, avec un impact de moins en moins significatif, car, à un certain point, le fait d'augmenter la limite va affecter peu de gens, donc la hausse des sommes à débourser sera moins importante.
+À partir des valeurs de la $\it{Table \ 3}$, il est possible d'observer une hausse du niveau de la prime lorsque la limite augmente. De plus, en regardant le graphique (C) de la $\it{Figure \ 1}$, il est possible d'observer cette croissance. D'ailleurs, en regardant le graphique (D) de la $\it{Figure \ 1}$, ayant un plus grand nombre de valeurs u, on remarque la concavité de la courbe, ce qui signifie que plus u augmente, moins l'augmentation est significative. Bref, cela fait du sens puisqu'en ayant une limite plus faible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser puisqu'elle ne payera pas ce qui a en excédent. Par conséquent, le niveau de la prime va augmenter plus la limite est grande, car la compagnie devra débourser de plus grandes sommes, et ce, avec un impact de moins en moins significatif, car, à un certain point, le fait d'augmenter la limite va affecter peu de gens, donc la hausse des sommes à débourser sera moins importante.
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Représenter graphiquement l'évalution en fonction de d
@@ -265,7 +265,7 @@ grid.arrange(plot1, plot2, plot3, plot4, ncol=2, nrow=2)
 \end{center}
 
 
-### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
+### d) Détermination de la prime stop-loss par simulation avec un déductible de 2000
 Il est également possible d'approximer la prime stop-loss par simulation. Alors, il est possible de tirer un échantillon de la loi log-normale suffisament grand pour estimer la prime stop-loss. Cela a été fait avec un m = 100 000, 500 000 et 1 000 000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
@@ -276,7 +276,7 @@ Il est également possible d'approximer la prime stop-loss par simulation. Alors
 Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs du déductible d à utiliser
-d <- d[1]
+d <- 2000
 
 # Nombre de simulations
 m <- c(1e5, 5e5, 1e6)
@@ -292,6 +292,13 @@ approximation <- sapply(1:3, function(x)
                         max(0, simulation[[x]][i] - 2000))))
 
 approx <- data.frame(m, approximation)
+
+# Écarts relatifs
+Prime_2000 <- Primes_STOP_LOSS$Prime[1]
+#Approx <- approx$approximation
+Approx <- c(1870.0455, 1872.1354, 1872.3536)
+Ecart <- abs((Approx-Prime_2000)/Prime_2000) * 100
+
 # Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
 #library(xtable)
 #options(xtable.comment = FALSE)
@@ -305,22 +312,22 @@ approx <- data.frame(m, approximation)
   \hline
  \bf{m} & \bf{approximation} \\ 
   \hline
-  100000 & 254.4107 \\ 
-  500000 & 253.3894 \\ 
-  1000000 & 253.4287 \\ 
-  \hline
+  100000 & 1870.0455 \\ 
+  500000 & 1872.1354 \\ 
+  1000000 & 1872.3536 \\ 
+   \hline
 \end{tabular}
 \caption{Valeurs approximées par simulations de la prime stop-loss ayant un déductible de 2000} 
 \end{table}
 
-La valeur de la prime stop-loss calculée en b) pour un déductible de 2000 est de 253.3579. Puis, en regardant les résultats obtenus à l'aide de la simulation, on se rend compte que ceux-ci sont très près de la valeur théorique. En effet, les écarts relatifs sont de 0.42%, 0.012% et 0.028%. Par conséquent, l'approximation est très précise et donne sensiblement la même valeur que la valeur théorique.
+La valeur de la prime stop-loss calculée en b) pour un déductible de 2000 est de `r round(Prime_2000,4)`. Puis, en regardant les résultats obtenus à l'aide de la simulation, on se rend compte que ceux-ci sont très près de la valeur théorique, soit `r round(Approx[1],4)`, `r round(Approx[2],4)` et `r round(Approx[3],4)` pour 100 000, 500 000 et 1 000 000 simulations respectivement. En effet, les écarts relatifs sont de `r round(Ecart[1],4)`%,`r round(Ecart[2],4)`% et `r round(Ecart[3],4)`%. Par conséquent, l'approximation est très précise et donne sensiblement la même valeur que la valeur théorique lorsqu'un grand nombre de simulations est effectué.
 
-
+\newpage
 # Question 2
 ## Méthode de vraisemblance avec données groupées
 ### a) Estimation des paramètres
 
-Le jeu de données utilisé afin de compléter ce numéro comportait les 10 données suivantes :
+Le jeu de données utilisé afin de compléter ce numéro comportait les données suivantes :
 \begin{table}[ht]
 \centering
 \begin{tabular}{cc}
@@ -345,12 +352,12 @@ Le jeu de données utilisé afin de compléter ce numéro comportait les 10 donn
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS
-Estimateurs <- data.frame("mu" =6.8418, "sigma" = 0.8278)
+Estimateurs_2 <- data.frame("mu" =6.8418, "sigma" = 0.8278)
 
 # Présenter les estimateurs dans un tableau
 #library(xtable)
 #options(xtable.comment = FALSE)
-#xtable(Estimateurs, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
+#xtable(Estimateurs_2, caption = "Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance",  
 #                 align = c("c", "c", "c"),
 #                 digits = c(0, 4, 4)) 
 ```
@@ -366,7 +373,37 @@ Estimateurs <- data.frame("mu" =6.8418, "sigma" = 0.8278)
 \caption{Paramètres estimés d'une loi log-normale à l'aide du maximum de vraisemblance} 
 \end{table}
 
-Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vraisemblance, sont $\hat{\mu}$ = `r Estimateurs[1]` et $\hat{\sigma}$ = `r Estimateurs[2]`.
+
+\vspace{1\baselineskip}
+Il est également possible de déterminer les estimateurs de façon théorique. D'abord, il faut déterminer la fonction $g(x_i;\mu, \sigma)$ pour l'ensemble des scénarios, et ce, en fonction de la répartition de X puisque les valeurs correspondent à un interval et non à une valeur ponctuelle.
+\vspace{1\baselineskip}
+
+Alors comme $X \sim LN(\mu, \sigma)$, la fonction de répartition F(x) est la suivante :
+\begin{align*}
+    F_x(x) = \Phi \left(\frac{In(x) - \mu}{\sigma} \right)\\
+\end{align*}
+
+Ensuite, il faut appliquer la vraisemblance en tenant compte de tous les scénarios possibles et de la répartition de X.
+\begin{align*}
+    \L(\mu, \sigma) 
+    &= \prod_{i=1}^{10}g(x_i;\mu,\sigma) \\
+    &= [F_x(250) - F_x(0)]^3 \cdot [F_x(500) - F_x(250)]^4 \cdot ...  \cdot [F_x(5000) - F_x(3000)]^2  \\
+\end{align*}
+\begin{align*}
+    &= \left [\Phi \left(\frac{In(250) - \mu}{\sigma} \right) - \Phi \left(\frac{In(0) - \mu}{\sigma} \right) \right]^3 \cdot \left [\Phi \left(\frac{In(500) - \mu}{\sigma} \right) - \Phi \left(\frac{In(250) - \mu}{\sigma} \right) \right]^4  \\
+    &\cdot ... \cdot  \left [\Phi \left(\frac{In(5000) - \mu}{\sigma} \right) - \Phi \left(\frac{In(3000) - \mu}{\sigma} \right) \right]^2 \\
+\end{align*}
+
+Par la suite, il faut appliquer la log vraisemblance.
+\begin{align*}
+    \l(\mu, \sigma) 
+    &= In(L(\mu, \sigma)) = In \prod_{i=1}^{10}g(x_i; \mu, \sigma) \\
+    &= 3 In \left[\Phi \left(\frac{In(250) - \mu}{\sigma} \right) - 0 \right] + 4 In \left[\Phi \left(\frac{In(500) - \mu}{\sigma} \right) -  \Phi \left(\frac{In(250) - \mu}{\sigma} \right) \right]  \\ 
+    &+...+ 2 In \left[\Phi \left(\frac{In(5000) - \mu}{\sigma} \right) -  \Phi \left(\frac{In(3000) - \mu}{\sigma} \right) \right] \\
+\end{align*}
+
+
+Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vraisemblance, sont $\hat{\mu}$ = `r Estimateurs_2[1]` et $\hat{\sigma}$ = `r Estimateurs_2[2]`.
 
 
 ### b) Détermination des primes stop-loss
@@ -377,33 +414,66 @@ En ayant obtenu les estimés des paramètres à la question a), il est maintenan
     &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \left(1 - \Phi \left(\frac{Ind - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) \right) - d \left(1 - \Phi \left(\frac{Ind - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
 \end{align*}
 
-où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et d = déductible. Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
+où $\hat{\mu}$ = `r Estimateurs_2[1]`, $\hat{\sigma}$ = `r Estimateurs_2[2]` et d = déductible. Par conséquent, les valeurs obtenues pour la prime stop-loss sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS en a)
-mu <- 6.8418
-sigma <-  0.8278
+mu_2 <- 6.8418
+sigma_2 <-  0.8278
 
 # Valeurs des déductibles d à utiliser
-d <- 100 * seq(20,30)
+d_2 <- 100 * seq(20,30)
 
 # Calculer les primes STOP-LOSS pour les différents déductibles d
-STOP_LOSS <- function(x) {
-    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
-        x * (1 - pnorm((log(x) - mu)/sigma))
+STOP_LOSS_2 <- function(x) {
+    exp(mu_2 + sigma_2^2/2) * (1 - pnorm((log(x) - mu_2 - sigma_2^2)/sigma_2)) - 
+        x * (1 - pnorm((log(x) - mu_2)/sigma_2))
 }
 
-Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+Primes_STOP_LOSS_2 <- data.frame(d_2, "Prime" = sapply(d_2, function(x) STOP_LOSS_2(x)))
 
 # Présenter les valeurs des primes STOP-LOSS en fonction de d 
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour chacun des déductibles d donnés",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Primes_STOP_LOSS_2, caption = "Valeurs de la prime STOP-LOSS pour chacun des déductibles d donnés",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 0, 4)) 
+```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{d} & \bf{Prime stop-loss} \\ 
+  \hline
+  2000 & 253.3579 \\ 
+  2100 & 236.1653 \\ 
+  2200 & 220.3997 \\ 
+  2300 & 205.9213 \\ 
+  2400 & 192.6061 \\ 
+  2500 & 180.3436 \\ 
+  2600 & 169.0355 \\ 
+  2700 & 158.5939 \\ 
+  2800 & 148.9402 \\ 
+  2900 & 140.0041 \\ 
+  3000 & 131.7223 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de la prime stop-loss pour chacun des déductibles d donnés} 
+\end{table}
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Représenter graphiquement l'évolution en fonction de d
+library(ggplot2)
+plot5 <- ggplot(data = Primes_STOP_LOSS_2, aes(x= Primes_STOP_LOSS_2$d_2, y = Primes_STOP_LOSS_2$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") +ggtitle("(A)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_3 <- data.frame(d=(100 * seq(20,60)), "Prime" = sapply((100 * seq(20,60)), function(x) STOP_LOSS_2(x)))
+
+plot6 <- ggplot(data=value_test_3, aes(x=value_test_3$d, y=value_test_3$Prime)) + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") +ggtitle("(B)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 ```
 
-### c) Détermination des primes limited loss
+À partir des valeurs de la $\it{Table \ 7}$, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le graphique (A) de la $\it{Figure \ 2}$, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le graphique (B) de la $\it{Figure \ 2}$, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le montant qu'elle devra verser en prestations. Par conséquent, le niveau de la prime devrait diminuer, et ce, avec un impact de moins en moins significatif, car la valeur ajoutée d'augmenter le déductible pour la compagnie est de moins en moins importante.
+
+### c) Détermination de l'espérance limitée
 Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
 
 \begin{align*}
@@ -411,27 +481,67 @@ Maintenant, toujours en utilisant les paramètres estimés en a), il faut désor
     &= e^{\hat{\mu}+\frac{\hat{\sigma}^2}{2}} \Phi \left(\frac{Inu - \hat{\mu} - \hat{\sigma}^2}{\hat{\sigma}} \right) + u \left(1 - \Phi \left(\frac{Inu - \hat{\mu}}{\hat{\sigma}} \right) \right)\\
 \end{align*}
 
-où $\hat{\mu}$ = `r Estimateurs[1]`, $\hat{\sigma}$ = `r Estimateurs[2]` et u = limite. Par conséquent, les valeurs obtenues pour la prime limitée sont les suivantes:
+où $\hat{\mu}$ = `r Estimateurs_2[1]`, $\hat{\sigma}$ = `r Estimateurs_2[2]` et u = limite. Par conséquent, les valeurs obtenues pour l'espérance limitée sont les suivantes:
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs des limites u à utiliser
-u <- 100 * seq(30,40)
+u_2 <- 100 * seq(30,40)
 
 # Calculer l'espérance limitée pour les différents limites u
-Esp_limite <- function(x) {
-    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
-        x * (1 - pnorm((log(x) - mu)/sigma))
+Esp_limite_2 <- function(x) {
+    exp(mu_2 + sigma_2^2/2) * pnorm((log(x) - mu_2 - sigma_2^2)/sigma_2) + 
+        x * (1 - pnorm((log(x) - mu_2)/sigma_2))
 }
 
-Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+Primes_Esp_limite_2 <- data.frame(u_2, "Prime" = sapply(u_2, function(x) Esp_limite_2(x)))
 
 # Présenter les valeurs des espérances limitées en fonction de u
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
-                 align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+#library(xtable)
+#options(xtable.comment = FALSE)
+#xtable(Primes_Esp_limite_2, caption = "Valeurs de l'espérance limitée pour chacune des limites u données",  
+#                 align = c("c", "c", "c"),
+#                 digits = c(0, 0, 4)) 
 ```
+\begin{table}[ht]
+\centering
+\begin{tabular}{cc}
+  \hline
+ \bf{u} & \bf{Espérance limitée} \\ 
+  \hline
+  3000 & 1187.0103 \\ 
+  3100 & 1194.6945 \\ 
+  3200 & 1201.8320 \\ 
+  3300 & 1208.4691 \\ 
+  3400 & 1214.6471 \\ 
+  3500 & 1220.4038 \\ 
+  3600 & 1225.7731 \\ 
+  3700 & 1230.7858 \\ 
+  3800 & 1235.4700 \\ 
+  3900 & 1239.8511 \\ 
+  4000 & 1243.9524 \\ 
+   \hline
+\end{tabular}
+\caption{Valeurs de l'espérance limitée pour chacune des limites u données} 
+\end{table}
+
+À partir des valeurs de la $\it{Table \ 8}$, il est possible d'observer une hausse du niveau de la prime lorsque la limite augmente. De plus, en regardant le graphique (C) de la $\it{Figure \ 2}$, il est possible d'observer cette croissance. D'ailleurs, en regardant le graphique (D) de la $\it{Figure \ 2}$, ayant un plus grand nombre de valeurs u, on remarque la concavité de la courbe, ce qui signifie que plus u augmente, moins l'augmentation est significative. Bref, cela fait du sens puisqu'en ayant une limite plus faible, la compagnie vient diminuer le risque ainsi que le montant de prestation qu'elle devra verser puisqu'elle ne payera pas ce qui a en excédent. Par conséquent, le niveau de la prime va augmenter plus la limite est grande, car la compagnie devra débourser de plus grandes sommes, et ce, avec un impact de moins en moins significatif, car, à un certain point, le fait d'augmenter la limite va affecter peu de gens, donc la hausse des sommes à débourser sera moins importante.
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+# Représenter graphiquement l'évalution en fonction de d
+library(ggplot2)
+plot7 <- ggplot(data = Primes_Esp_limite_2, aes(x= Primes_Esp_limite_2$u_2, y = Primes_Esp_limite_2$Prime)) + geom_point() + geom_line() + xlab("u") + ylab("Espérance limitée") +ggtitle("(C)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_4 <- data.frame(u=(100 * seq(30,60)), "Prime" = sapply((100 * seq(30,60)), function(x) Esp_limite_2(x)))
+
+plot8 <- ggplot(data=value_test_4, aes(x=value_test_4$u, y=value_test_4$Prime)) + geom_point() + geom_line() + xlab("u") + ylab(" Espérance limitée") +ggtitle("(D)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+
+library(gridExtra)
+grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
+```
+
+
+
 
 # Question 3
 ## Estimateur de Bayes
@@ -545,10 +655,24 @@ Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
 # Présenter les valeurs des primes STOP-LOSS en fonction de d 
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour 
+xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime stop-loss pour 
                  chacun des déductibles d donnés",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
+
+# Représenter graphiquement l'évolution de la prime stop-loss en fonction de d
+library(ggplot2)
+plot1 <- ggplot(data = Primes_STOP_LOSS, aes(x= Primes_STOP_LOSS$d,
+                                             y = Primes_STOP_LOSS$Prime)) 
+    + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") 
+    + ggtitle("(A)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test <- data.frame(d=(100 * seq(20,60)), "Prime" = sapply((100 * seq(20,60)), 
+                function(x) STOP_LOSS(x)))
+
+plot2 <- ggplot(data=value_test, aes(x=value_test$d, y=value_test$Prime)) 
+    + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") 
+    + ggtitle("(B)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 ```
 
 ### c) Détermination des primes limited loss
@@ -571,12 +695,30 @@ xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour
                  chacune des limites u données",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
+
+# Représenter graphiquement l'évolution de l'espérance limitée en fonction de u
+library(ggplot2)
+plot3 <- ggplot(data = Primes_Esp_limite, aes(x= Primes_Esp_limite$u, 
+                                              y = Primes_Esp_limite$Prime)) 
+    + geom_point() + geom_line() + xlab("u") + ylab("Espérance limitée") +ggtitle("(C)") 
+    + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_2 <- data.frame(u=(100 * seq(30,60)), "Prime" = sapply((100 * seq(30,60)), 
+                    function(x) Esp_limite(x)))
+
+plot4 <- ggplot(data=value_test_2, aes(x=value_test_2$u, y=value_test_2$Prime)) 
+    + geom_point() + geom_line() + xlab("u") + ylab(" Espérance limitée") 
+    + ggtitle("(D)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+# Mettre les 4 graphiques ensembles
+library(gridExtra)
+grid.arrange(plot1, plot2, plot3, plot4, ncol=2, nrow=2)
 ```
 
 ### d) Détermination de la prime stop-loss par simulation avec un déductible d = 2000
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs du déductible d à utiliser
-d <- d[1]
+d <- 2000
 
 # Nombre de simulations
 m <- c(1e5, 5e5, 1e6)
@@ -593,10 +735,16 @@ approximation <- sapply(1:3, function(x)
 
 approx <- data.frame(m, approximation)
 
+# Trouver les écarts relatifs (par rapport à la valeur théorique)
+Prime_2000 <- Primes_STOP_LOSS$Prime[1]
+Approx <- approx$approximation
+
+Ecart <- abs((Approx-Prime_2000)/Prime_2000) * 100
+
 # Présenter les valeurs approximées de la prime STOP-LOSS ayant un déductible de 2000 
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(approx, caption = "Valeurs approximées par simulations de la prime STOP-LOSS 
+xtable(approx, caption = "Valeurs approximées par simulations de la prime stop-loss 
                  ayant un déductible de 2000",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
@@ -656,50 +804,83 @@ run;
 ### b) Détermination des primes stop-loss
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
 # Les estimateurs ont été calculés à l'aide de SAS en a)
-mu <- 6.8418
-sigma <-  0.8278
+mu_2 <- 6.8418
+sigma_2 <-  0.8278
 
 # Valeurs des déductibles d à utiliser
-d <- 100 * seq(20,30)
+d_2 <- 100 * seq(20,30)
 
 # Calculer les primes STOP-LOSS pour les différents déductibles d
-STOP_LOSS <- function(x) {
-    exp(mu + sigma^2/2) * (1 - pnorm((log(x) - mu - sigma^2)/sigma)) - 
-        x * (1 - pnorm((log(x) - mu)/sigma))
+STOP_LOSS_2 <- function(x) {
+    exp(mu_2 + sigma_2^2/2) * (1 - pnorm((log(x) - mu_2 - sigma_2^2)/sigma_2)) - 
+        x * (1 - pnorm((log(x) - mu_2)/sigma_2))
 }
 
-Primes_STOP_LOSS <- data.frame(d, "Prime" = sapply(d, function(x) STOP_LOSS(x)))
+Primes_STOP_LOSS_2 <- data.frame(d_2, "Prime" = sapply(d_2, function(x) STOP_LOSS_2(x)))
 
 # Présenter les valeurs des primes STOP-LOSS en fonction de d 
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_STOP_LOSS, caption = "Valeurs de la prime STOP-LOSS pour 
+xtable(Primes_STOP_LOSS_2, caption = "Valeurs de la prime STOP-LOSS pour 
                  chacun des déductibles d donnés",  
                  align = c("c", "c", "c"),
                  digits = c(0, 0, 4)) 
+
+# Représenter graphiquement l'évolution de la prime stop-loss en fonction de d
+library(ggplot2)
+plot5 <- ggplot(data = Primes_STOP_LOSS_2, aes(x= Primes_STOP_LOSS_2$d_2, 
+                                               y = Primes_STOP_LOSS_2$Prime)) 
+    + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") 
+    + ggtitle("(A)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_3 <- data.frame(d=(100 * seq(20,60)), "Prime" = sapply((100 * seq(20,60)), 
+                    function(x) STOP_LOSS_2(x)))
+
+plot6 <- ggplot(data=value_test_3, aes(x=value_test_3$d, y=value_test_3$Prime)) 
+    + geom_point() + geom_line() + xlab("d") + ylab("Prime stop-loss") +ggtitle("(B)") 
+    + theme(plot.title =  element_text(face="bold", hjust = 0.5))
 ```
 
 ### c) Détermination des primes limited loss
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
 # Valeurs des limites u à utiliser
-u <- 100 * seq(30,40)
+u_2 <- 100 * seq(30,40)
 
-# Calculer l'espérance limitée pour les différentes limites u
-Esp_limite <- function(x) {
-    exp(mu + sigma^2/2) * pnorm((log(x) - mu - sigma^2)/sigma) + 
-        x * (1 - pnorm((log(x) - mu)/sigma))
+# Calculer l'espérance limitée pour les différents limites u
+Esp_limite_2 <- function(x) {
+    exp(mu_2 + sigma_2^2/2) * pnorm((log(x) - mu_2 - sigma_2^2)/sigma_2) + 
+        x * (1 - pnorm((log(x) - mu_2)/sigma_2))
 }
 
-Primes_Esp_limite <- data.frame(u, "Prime" = sapply(u, function(x) Esp_limite(x)))
+Primes_Esp_limite_2 <- data.frame(u_2, "Prime" = sapply(u_2, function(x) Esp_limite_2(x)))
 
 # Présenter les valeurs des espérances limitées en fonction de u
 library(xtable)
 options(xtable.comment = FALSE)
-xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour 
-                 chacune des limites u données",  
+xtable(Primes_Esp_limite_2, caption = "Valeurs de l'espérance limitée 
+                 pour chacune des limites u données",  
                  align = c("c", "c", "c"),
-                 digits = c(0, 0, 4)) 
+                 digits = c(0, 0, 4))
+
+# Représenter graphiquement l'évolution de l'espérance limitée en fonction de u
+library(ggplot2)
+plot7 <- ggplot(data = Primes_Esp_limite_2, aes(x= Primes_Esp_limite_2$u_2, 
+                                                y = Primes_Esp_limite_2$Prime)) 
+    + geom_point() + geom_line() + xlab("u") + ylab("Espérance limitée") 
+    + ggtitle("(C)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+value_test_4 <- data.frame(u=(100 * seq(30,60)), "Prime" = sapply((100 * seq(30,60)), 
+                    function(x) Esp_limite_2(x)))
+
+plot8 <- ggplot(data=value_test_4, aes(x=value_test_4$u, y=value_test_4$Prime)) 
+    + geom_point() + geom_line() + xlab("u") + ylab(" Espérance limitée") 
+    + ggtitle("(D)") + theme(plot.title =  element_text(face="bold", hjust = 0.5))
+
+# Mettre les 4 graphiques ensembles
+library(gridExtra)
+grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
 ```
+
 
 # Question 3
 ### a) Estimation du paramètre $\theta$
