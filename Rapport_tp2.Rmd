@@ -375,7 +375,7 @@ Estimateurs_2 <- data.frame("mu" =6.8418, "sigma" = 0.8278)
 
 
 \vspace{1\baselineskip}
-Il est également possible de déterminer les estimateurs de façon théorique. D'abord, il faut déterminer la fonction $g(x_i;\mu, \sigma)$ pour l'ensemble des scénarios, et ce, en fonction de la répartition de X puisque les valeurs correspondent à un interval et non à une valeur ponctuelle.
+Afin de déterminer les estimateurs de la loi log-normale, il faut d'abord trouver la fonction $g(x_i;\mu, \sigma)$ pour l'ensemble des scénarios, et ce, en fonction de la répartition de X puisque les valeurs correspondent à un interval et non à une valeur ponctuelle.
 \vspace{1\baselineskip}
 
 Alors comme $X \sim LN(\mu, \sigma)$, la fonction de répartition F(x) est la suivante :
@@ -402,6 +402,7 @@ Par la suite, il faut appliquer la log vraisemblance.
     &+...+ 2 In \left[\Phi \left(\frac{In(5000) - \mu}{\sigma} \right) -  \Phi \left(\frac{In(3000) - \mu}{\sigma} \right) \right] \\
 \end{align*}
 
+Finalement, il faut chercher à maximiser la fonction log vraisemblance afin d'obtenir les estimateurs $\hat{\mu}$ et $\hat{\sigma}$. Cela a été fait à l'aide du logiciel SAS.
 
 Donc, les estimateurs de la loi log-normale, selon la méthode du maximum de vraisemblance, sont $\hat{\mu}$ = `r Estimateurs_2[1]` et $\hat{\sigma}$ = `r Estimateurs_2[2]`.
 
