@@ -437,11 +437,54 @@ xtable(Primes_Esp_limite, caption = "Valeurs de l'espérance limitée pour chacu
 ## Estimateur de Bayes
 ### a) Estimation du paramètre $\theta$
 
+```{r, include=FALSE}
+library(MASS)
+library(fitdistrplus)
+
+# Paramètre de la loi beta et binomial
+a <- 2
+b <- 2
+r <- 2
+
+# Données
+x <- 5
+x <- rnbinom(100, 2, 0.4)
+fitdistr(x, "negative binomial")
+p <- r / (fitdistr(x, "negative binomial")$estimate[2] + r)
+p
+```
+
+
 ### b) Présentation graphique de la loi beta a priori
 
-### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes
+### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes 
+
+
+
+\begin{align*}
+f_{x_i}(x_i) &= \int_0^1 \binom{r + x_i - 1}{x_i} \theta^r (1 - \theta)^{x_i} \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta \\
+             &= \binom{r + x_i - 1}{x_i} \frac{B(\alpha + r, \beta + x_i)}{B(\alpha, \beta)} \int_0^1 \frac{\theta^{\alpha + r - 1} (1 - \theta)^{\beta + x_i - 1}}{B(\alpha + r, \beta + x_i)} d\theta \\
+             &= \frac{\Gamma(r + x_i)}{\Gamma(r) x_i!} \frac{\Gamma(\alpha + r) \Gamma(\beta + x_i)}{\Gamma(\alpha + \beta + r + x_i)} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} \\
+             &= \frac{\Gamma(2 + x_i)}{\Gamma(2) x_i!} \frac{\Gamma(2 + 2) \Gamma(2 + x_i)}{\Gamma(2 + 2 + 2 + x_i)} \frac{\Gamma(2 + 2)}{\Gamma(2) \Gamma(2)} \\
+             &= \frac{\Gamma(2 + x_i)}{x_i!} \frac{\Gamma(4) \Gamma(2 + x_i)}{\Gamma(6 + x_i)} \Gamma(4) \\
+             &= \frac{36 [\Gamma(2 + x_i)]^2}{x_i! \Gamma(6 + x_i)},\: x_i = 0,1,2,... 
+\end{align*}
+
+
 
 ### d) Approximation de l'estimateur de Bayes par simulation
+
+```{r}
+m <- 10000
+f <- function(x){
+    36 * (gamma(2 + x))^2 / factorial(x) / gamma(6 + x)
+}
+
+
+valeur <- sapply(0:100, function(i) f(i))
+cumsum(valeur)
+```
+
 
 \newpage
 # Annexe
