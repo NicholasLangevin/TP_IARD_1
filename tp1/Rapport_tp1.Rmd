@@ -30,8 +30,10 @@ output: pdf_document
 
 # Question 1
 ### a) Estimation du coefficient d'asymétrie
- 
+
+100 données ont été simulées à l'aide d'une loi exponentielle de moyenne 1 et ces données se trouvent dans l'annexe. D'ailleurs, à partir de ces données, il a été possible de tracer un histrogramme et d'estimer le coefficient d'asymétrie. La densité de la loi exponentielle de moyenne 1 a été ajouté à l'histogramme afin de pouvoir comparer la distribution des données.
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+set.seed(567) 
 data <-  rexp(100, 1)
 
 coef_asymetrie <- function(x){
@@ -41,7 +43,14 @@ coef_asymetrie <- function(x){
 }
 
 estimateur_coef_asymetrie <- coef_asymetrie(data)
+```
 
+\begin{align*}
+    \hat{\gamma} 
+    &=\frac{\sum_{i=1}^{100}(X_i-\mu)^3}{\sigma^3} \ = \ `r estimateur_coef_asymetrie` 
+\end{align*}
+
+```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 library(ggplot2)
 data2 <- data.frame(data)
 df <- data.frame(x = data, y = dexp(data, 1))
@@ -50,7 +59,7 @@ ggplot(data = data2) +
         geom_histogram(aes(x = data, y = ..density..),
                    binwidth = 0.25, fill = "grey", color = "black") +
         geom_line(data = df, aes(x = data, y = y), color = "red") +
-        ggtitle("Histogramme des valeurs simulées à partir \nd'une loi exponentielle de moyenne 1") + 
+        ggtitle("Histogramme des données") + 
         theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
         xlab("Données") +
         ylab("Densité") +
@@ -125,7 +134,7 @@ Ainsi, le coeficient d'asymétrie théorique est donnée par
     &= 2
 \end{align*}
 
-Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est de 2. Cela s'avère compatible avec l'estimé ponctuel obtenu en a) puisque celui-ci est de `r estimateur_coef_asymetrie`, ce qui est assez près de 2. Pour ce qui est de l'intervalle de confiance obtenu en b), il est possible d'observer que la valeur théorique est incluse dans cette intervalle qui est `r IC_coef_asymetrie`. Par conséquent, les estimateurs obtenus sont compatibles avec la valeur théorique. Toutefois, ceux-ci ne sont pas très précis en raison du nombre d'observations qui est assez faible, soit 100 observations. En augmentant le nombre d'observation, l'intervalle de confiance serait plus petit et l'estimateur serait plus précis.
+Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est de 2. Cela s'avère compatible avec l'estimé ponctuel obtenu en a) puisque celui-ci est de `r estimateur_coef_asymetrie`, ce qui est assez près de 2. Pour ce qui est de l'intervalle de confiance obtenu en b), il est possible d'observer que la valeur théorique est incluse dans cette intervalle qui est (`r IC_coef_asymetrie`). Par conséquent, les estimateurs obtenus sont compatibles avec la valeur théorique. Toutefois, ceux-ci ne sont pas très précis en raison du nombre d'observations qui est assez faible, soit 100 observations. En augmentant le nombre d'observation, l'intervalle de confiance serait plus petit et l'estimateur serait plus précis.
 
 
 \newpage
@@ -133,7 +142,7 @@ Le coefficient d'asymétrie théorique de la loi exponentielle de moyenne 1 est 
 # Question 2
 ### a) Estimation de l'espérance limitée
 
-La fonction quantile théorique d'une loi exponentielle ($\theta =1$) est déterminée de cette façon :
+Pour pouvoir déterminer les valeurs des limites u, il faut utiliser la fonction quantile théorique d'une loi exponentielle ($\theta =1$). Ainsi, en ayant u, il sera possible d'estimer l'espérance limitée. 
 \begin{align*}
     X 
     &\sim Exp(\theta = 1) \\
@@ -146,7 +155,11 @@ La fonction quantile théorique d'une loi exponentielle ($\theta =1$) est déter
     &= e^{-x} \\
     F_x^{-1}(k) 
     &= x = -ln(1-k) \\
+    \hat E\left[ min(X,u) \right]
+    &= \frac{\sum_{i=1}^{100} min(X, \mu)}{n}
 \end{align*}
+
+
 
 ```{R, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
 # Déterminer les limites u à l'aide de la fonction quantile
@@ -166,7 +179,8 @@ colnames(resultats) <- c('Percentile',"Limite u","Espérance limitée")
 library(xtable)
 options(xtable.comment = FALSE)
 xtable(resultats, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
-                 align = c("c", "c", "c", "c")) 
+                 align = c("c", "c", "c", "c"),
+                 digits = c(0, 2, 7, 7)) 
 ```
 
 $E[min(X,u)]$ estimé est une fonction croissante en fonction du $u$. En effet, le tableau présente une augmentation de la valeur de l'espérance lorsque $u$ augmente. Cela s'avère tout à fait logique puisque lorsque $u$ est petit, la fonction $min(X,u)$ prend davantage en considération les valeurs de $u$. Par conséquent, les valeurs supérieures de $x$ sont réduites, ce qui réduit donc la moyenne, car elle ne tient compte que des valeurs inférieures ou égales à $u$. Alors, si $u$ augmente, l'espérance prendra en compte des valeurs plus grande de $x$, car $u$ aura augmenté.
@@ -206,9 +220,12 @@ colnames(resultats_2) <- c("Percentile","Limite u","Espérance limité", "Varian
 library(xtable)
 options(xtable.comment = FALSE)
 xtable(resultats_2, caption = "Valeurs de l'espérance limitée et de sa variance pour les percentiles 0.5 et 0.75",  
-                 align = c("c", "c", "c", "c", "c"))
+                 align = c("c", "c", "c", "c", "c"),
+                 digits = c(0,2,7,7,8))
 ```
-Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{-1}(0.5))]$ est de ??????, alors que celle pour $E[min(X,F^{-1}(0.75))]$ est de $???????$. À partir des estimateurs de $E[min(X,u)]$ calculés en a) pour $u = F^{-1}(0.5)$ et $u = F^{-1}(0.75)$ et de ces variances estimées, il est possible d'obtenir les intervalles de confiance suivants : 
+
+
+Avec la méthode de ré-échantillonnage, la variance estimée pour $E[min(X,F^{-1}(0.5))]$ est de $0.00058433$, alors que celle pour $E[min(X,F^{-1}(0.75))]$ est de `r variance_Esperance_limite_simul[2]`. À partir des estimateurs de $E[min(X,u)]$ calculés en a) pour $u = F^{-1}(0.5)$ et $u = F^{-1}(0.75)$ et de leurs variances estimées, il est possible d'obtenir les intervalles de confiance suivants : 
 
 \begin{align*}
 [`r IC_Esperance_limite_simul[[1]]`] ,\ pour \ u = F^{-1}(0.5)
@@ -279,7 +296,7 @@ Estimateur_KM <- cumprod(1-Si/ri)
 \begin{figure}[!h]
     \centering
     \includegraphics[height=7.5cm]{tableau_kaplan.png}
-    \caption{Données permettant de trouver l'estimateur Kaplan-Meier trouver à partir de SAS}
+    \caption{Données permettant de trouver les estimateurs Kaplan-Meier, et ce, à partir de SAS}
 \end{figure}
 
 
@@ -296,22 +313,23 @@ La table précèdente présente toutes les données utiles permettant de déterm
             \prod\limits_{i=1}^{k}(\frac{r_i-S_i}{r_i}) , \ t>y_k
         \end{array}
     \right. \\
-    \hat{S}_n(i) &= \left\{
+    \hat{S}_n(t) &= \left\{
         \begin{array}{ll}
-            1                   &, 0\leqslant i<1,\\
-            `r Estimateur_KM[1]`&, 1\leqslant i<2,\\
-            `r Estimateur_KM[2]`&, 2\leqslant i<3,\\
-            `r Estimateur_KM[3]`&, 3\leqslant i<4,\\
-            `r Estimateur_KM[4]`&, 4\leqslant i<5,\\
-            `r Estimateur_KM[5]`&, 5\leqslant i<6,\\
-            `r Estimateur_KM[6]`&, 6\leqslant i<7,\\
-            `r Estimateur_KM[7]`&, 7\leqslant i<8,\\
-            `r Estimateur_KM[8]`&, i \geqslant 8
+            1                   &, 0\leqslant t<30,\\
+            `r Estimateur_KM[1]`&, 30\leqslant t<40,\\
+            `r Estimateur_KM[2]`&, 40\leqslant t<57,\\
+            `r Estimateur_KM[3]`&, 57\leqslant t<65,\\
+            `r Estimateur_KM[4]`&, 65\leqslant t<84,\\
+            `r Estimateur_KM[5]`&, 84\leqslant t<90,\\
+            `r Estimateur_KM[6]`&, 90\leqslant t<98,\\
+            `r Estimateur_KM[7]`&, 98\leqslant t<101,\\
+            `r Estimateur_KM[8]`&, t \geqslant 101
         \end{array}
     \right.
 \end{align*}
 
-### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour $S_n(50)$
+\newpage
+### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour $\hat{S}_n(50)$
 ```{R, echo = FALSE, message = FALSE, warning = FALSE}
 # Calculer un estimateur pour la variance de la fonction de survie à l'aide de 
 # la formule de Greenwood
@@ -342,30 +360,31 @@ IC_KM <- cbind(Sn_50 - qnorm(0.975) * sqrt(Var_Sn_50),
 Calculer un estimateur pour la variance de la fonction de survie à l'aide de la formule de Greenwood :
 \begin{align*}
     \widehat{Var}(\hat{S}_n(t))
-    &=[\hat{S}_n(y_j)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)} \\
-    \widehat{Var}(\hat{S}_n(y_j)) &= \left\{
+    &=[\hat{S}_n(t)]^2\sum_{i=1}^j\frac{S_i}{r_i(S_i-r_i)} \\
+    \widehat{Var}(\hat{S}_n(t)) &= \left\{
         \begin{array}{ll}
-            `r formule_Greenwood[1]`&,\ i=1,\\
-            `r formule_Greenwood[2]`&,\ i=2,\\
-            `r formule_Greenwood[3]`&,\ i=3,\\
-            `r formule_Greenwood[4]`&,\ i=4,\\
-            `r formule_Greenwood[5]`&,\ i=5,\\
-            `r formule_Greenwood[6]`&,\ i=6,\\
-            `r formule_Greenwood[7]`&,\ i=7
+            0 &, 0\leqslant t<30,\\
+            `r formule_Greenwood[1]`&, 30\leqslant t<40,\\
+            `r formule_Greenwood[2]`&, 40\leqslant t<57,\\
+            `r formule_Greenwood[3]`&, 57\leqslant t<65,\\
+            `r formule_Greenwood[4]`&, 65\leqslant t<84,\\
+            `r formule_Greenwood[5]`&, 84\leqslant t<90,\\
+            `r formule_Greenwood[6]`&, 90\leqslant t<98,\\
+            `r formule_Greenwood[7]`&, 98\leqslant t<101\\
         \end{array}
     \right.
 \end{align*}
 
-Alors, en ayant les valeurs de l'estimateur Kaplan-Meier et celles de Greenwood, il est possible de déduire les intervalles de confiance au niveau 0.95 pour $\hat{S}_n(50)$ au moment des décès.
-Ainsi, en ayant $\hat{S}_n(50)\:$= `r Sn_50` et $\widehat{Var}(\hat{S}_n(50))\:$= `r Var_Sn_50`, il est possible d'évaluer l'intervalle de confiance au niveau de confiance 95%. 
+Alors, en ayant les valeurs de l'estimateur Kaplan-Meier et celles de Greenwood, il est possible de déduire les intervalles de confiance au niveau 0.95 pour $\hat{S}_n(50)$. Donc, la valeur de $\hat{S}_n(50)\:$= `r Sn_50` et celle de la $\widehat{Var}(\hat{S}_n(50))\:$= `r Var_Sn_50` puisque 50 appartient à l'intervalle 40 à 57 et puisqu'il s'agit d'une fonction de survie, il faut utiliser la borne inférieure. La figure 2 montre également que 50 est sur la marche correspondant à 0.8.
+
 \begin{align*}
-    S_n(y_{50}) &\in \hat{S}_n(y_{50})) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(y_{50}))}\\
-S_n(y_{50}) &\in `r Sn_50` \pm z_{0.975} \sqrt{`r Var_Sn_50`} \\
-S_n(y_{50}) &\in [`r IC_KM`]
+    S_n(50) &\in \hat{S}_n(50)) \pm z_{0.975} \sqrt{\widehat{Var}(\hat{S}_n(50))}\\
+S_n(50) &\in `r Sn_50` \pm z_{0.975} \sqrt{`r Var_Sn_50`} \\
+S_n(50) &\in [`r IC_KM`]
 \end{align*}
 
 
-
+\newpage
 ### c) Intervalle de confiance pour $\hat{S}_n(50)$ avec la transformation log (-log)
 ```{R echo =FALSE, eval = TRUE}
 # La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes
@@ -377,16 +396,15 @@ IC_log_KM <- cbind(Sn_50^(1/u),
 ```
 La valeur estimée de la fonction de survie et la valeur estimée de la variance sont toujours les mêmes que celles de la section b). Par conséquent, seulement l'intervalle de confiance est modifié. Alors, l'intervalle de confiance log transformed au niveau de confiance 95% est déterminé de cette façon: 
 \begin{align*}
-    \hat{S}_n(y_{50}) &\in  \ [\hat{S}_n(y_{50}))^{1/u} , \hat{S}_n(y_{50}))^{u}] \\
+    \hat{S}_n(50) &\in  \ [\hat{S}_n(50))^{1/u} , \hat{S}_n(50))^{u}] \\
     où \ u
     &= exp\left\{ \frac{z_{0.975} \sqrt{\widehat{Var}[\hat{S}_n(50)]}}{\hat{S}_n(50) \text{ln}(\hat{S}_n(50))}\right\} \\
     &= exp\left\{\frac{z_{0.975} \sqrt{`r Var_Sn_50`}}{`r Sn_50` \cdot \text{ln}(`r Sn_50`)}\right\} \\
     \\
-    \hat{S}_n(y_{50}) &\in [`r IC_log_KM`]
+    \hat{S}_n(50) &\in [`r IC_log_KM`]
 \end{align*}
 
-# Mettre commentaire ici
-L'intervalle de confiance devrait être plus petit et précis dans le cas de la transformation log.
+Les deux intervalles de confiance contiennent la valeur estimée de la fonction de survie. D'ailleurs, les deux intervalles de confiance sont assez larges, soit un étendu de `r IC_KM[2] - IC_KM[1]` pour l'intervalle de confiance normal et de `r IC_log_KM[2] - IC_log_KM[1]` pour l'intervalle de confiance avec la transformation log. Alors, le second intervalle est légèrement plus grand et cela s'explique par le fait que le nombre d'observations est plutôt faible. En ayant un nombre d'observations plus élevé, l'étendu des intervalles de confiance seraient plus faibles. D'ailleurs, l'intervalle de confiance avec la transformation log serait plus précis que celui normal, car la convergence vers la loi normale se fait plus rapidement. Finalement, l'intervalle de confiance avec la transformation log donne une borne supérieure qui a plus de sens, car elle est inférieure à 1 et la valeur d'une fonction de survie doit se trouver entre 0 et 1.   
 
 
 \newpage
@@ -414,12 +432,6 @@ coef_asymetrie <- function(x){
 estimateur_coef_asymetrie <- coef_asymetrie(data)
 
 # Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)
-hist(data, probability = TRUE,
-     main = "Histogramme des données",
-     ylab = "Densité",
-     xlab = "Données");curve(dexp(x,1), add = TRUE)
-
-# Histograme des données avec la courbe théorique d'un loi exponentielle (teta = 1)
 library(ggplot2)
 data2 <- data.frame(data)
 df <- data.frame(x = data, y = dexp(data, 1))
@@ -428,11 +440,9 @@ ggplot(data = data2) +
         geom_histogram(aes(x = data, y = ..density..),
                    binwidth = 0.25, fill = "grey", color = "black") +
         geom_line(data = df, aes(x = data, y = y), color = "red") +
-        ggtitle("Histogramme des valeurs simulées à partir 
-                    d'une loi exponentielle de moyenne 1") + 
+        ggtitle("Histogramme des données") + 
         theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
-        xlab("Données") +
-        ylab("Densité") +
+        xlab("Données") + ylab("Densité") +
         scale_y_continuous(limits = c(0, 1))
 ```
 
@@ -482,7 +492,8 @@ colnames(resultats) <- c('Percentile',"Limite u","Espérance limitée")
 library(xtable)
 options(xtable.comment = FALSE)
 xtable(resultats, caption = "Valeurs de l'espérance limitée pour chaque limite u donnée",  
-                 align = c("c", "c", "c", "c")) 
+                 align = c("c", "c", "c", "c"),
+                 digits = c(0, 2, 7, 7)) 
 
 ```
 
@@ -524,8 +535,10 @@ library(xtable)
 options(xtable.comment = FALSE)
 xtable(resultats_2, caption = "Valeurs de l'espérance limitée et de sa variance 
                  pour les percentiles 0.5 et 0.75",  
-                 align = c("c", "c", "c", "c", "c"))
+                 align = c("c", "c", "c", "c", "c"),
+                 digits = c(0,2,7,7,8))
 ```
+
 
 ### c) $E[min(X,u)]$ théorique
 Aucun calcul R n'a été fait dans cette section.
@@ -556,61 +569,22 @@ colnames(tableau2) <- c("i", "yi", "Si", "ri", "Kaplan-Meier")
 
 # Déterminer l'estimateur Kaplan-Meier pour chacun des moments uniques des décès
 Estimateur_KM <- cumprod(1-Si/ri)
-
-# Publier le tableau 2 
-library(xtable)
-options(xtable.comment = FALSE)
-xtable(tableau2, caption = "Données permettant de trouver l'estimateur Kaplan-Meier",  
-                 align = c("c", "c", "c", "c", "c", "c")) 
-
-
 ```
 
 ### b) Graphique de l'estimateur Kaplan-Meier et intervalle de confiance pour $S_n(50)$
 ```{R, echo = TRUE, eval = FALSE}
-# Graphique de la fonction de survie estimée par l'estimateur Kaplan-Meier
-library(ggplot2)
-ggplot(data = tableau2, aes(x=unlist(tableau2["yi"]),y=unlist(tableau2["Kaplan-Meier"])))+ 
-        geom_point() + 
-        geom_line() + 
-        ggtitle("Valeur de la fonction de survie estimée à l'aide de l'estimateur
-                Kaplan-Meier en fonction des temps de décès ou de retraits") + 
-        theme(plot.title =  element_text(face="bold", hjust = 0.5)) +
-        xlab("Temps") +
-        ylab("Estimateur Kaplan-Meier")
-
 # Calculer un estimateur pour la variance de la fonction de survie à l'aide de 
 # la formule de Greenwood
 formule_Greenwood <- Estimateur_KM^2 * cumsum(Si/ri/(ri-Si))
 
-# Pour ce qui est de l'intervalle de confiance au niveau 95% pour S(50), il faut faire
-# une interpolation linéaire (OGIVE) entre y_i = 40 et y_i = 57.
+# Pour ce qui est de l'intervalle de confiance au niveau 95% pour S(50), il 
+# faut estimer la valeur de S(50) et de Var(S(50))
 
-# Estimer S(50) avec la fonction OGIVE
-Sn_50 <- {
-    x <- 50
-    ci <- 40
-    cj <- 57
-    alpha <- (cj-x)/(cj-ci)
-    
-    Estimateur_KM[2] * alpha + Estimateur_KM[3] * (1 - alpha) 
-}
+# Estimer S(50) 
+Sn_50 <- Estimateur_KM[2]
 
-# Estimer Var(S(50)) avec la fonction OGIVE
-Var_Sn_50 <- {
-    x <- 50
-    ci <- 40
-    cj <- 57
-    alpha <- (cj-x)/(cj-ci)
-    n <- length(yi)
-    
-    var_Y <- n * Estimateur_KM[2] * (1 - Estimateur_KM[2])
-    var_Z <- n * (Estimateur_KM[2] - Estimateur_KM[3] * (1 - Estimateur_KM[2]
-            + Estimateur_KM[3]))
-    cov <- -n * (1 - Estimateur_KM[2]) * (Estimateur_KM[2] - Estimateur_KM[3])
-    
-    (var_Y*(cj-ci)^2 + var_Z*(x-ci)^2 + 2*cov*(cj-ci)*(x-ci)) / (n*(cj-ci))^2
-}
+# Estimer Var(S(50)) 
+Var_Sn_50 <- formule_Greenwood[2]
 
 # Intervalle de confiance au niveau 95% pour S(50)
 IC_KM <- cbind(Sn_50 - qnorm(0.975) * sqrt(Var_Sn_50),
