@@ -540,61 +540,95 @@ plot8 <- ggplot(data=value_test_4, aes(x=value_test_4$u, y=value_test_4$Prime)) 
 library(gridExtra)
 grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
 ```
-
+\newpage
 
 
 
 # Question 3
 ## Estimateur de Bayes
 ### a) Estimation du paramètre $\theta$
-
-```{r, include=FALSE}
-library(MASS)
-library(fitdistrplus)
-
-# Paramètre de la loi beta et binomial
-a <- 2
-b <- 2
-r <- 2
-
-# Données
-x <- 5
-x <- rnbinom(100, 2, 0.4)
-fitdistr(x, "negative binomial")
-p <- r / (fitdistr(x, "negative binomial")$estimate[2] + r)
-p
-```
+On trouve le maximum de vraisemblance pour la loi binomial négative avec $r = 2$ pour le paramètre $\theta$, qui représente la probabilité de succès. On suposse de prime à bord qu'il n'y a pas de loi à priori. Le maximum de vraisemblance est alors
+défini par:
+\begin{align*}
+L(\theta) &= \prod_{i=1}^n \binom{r + x_1 -1}{x_i} \theta^r (1 - \theta)^{x_i} \\
+&= \theta^{nr} (1 - \theta)^{\sum_{i=1}^n x_i} \prod_{i=1}^n \binom{r + x_1 -1}{x_i} 
+\end{align*}
+On trouve alors la log-vraisemblance
+\begin{align*}
+l(\theta) &= \ln(\theta^{nr}) + \ln(1 - \theta)^{\sum_{i=1}^n x_i} - \sum_{i=1}^n \ln\binom{r + x_1 -1}{x_i} \\
+&= nr \ln\theta + \sum_{i=1}^n x_i \ln(1 - \theta) - \sum_{i=1}^n \ln\binom{r + x_1 -1}{x_i}
+\end{align*}
+On dérive ensuite par rapport à $\theta$ pour trouver l'estimateur
+\begin{align*}
+\frac{dl(\theta)}{d\theta} &= \frac{nr}{\theta} - \frac{\sum_{i=1}^n x_i}{(1-\theta)} = 0 \\
+\Rightarrow& \frac{nr}{\theta} = \frac{\sum_{i=1}^n x_i}{(1-\theta)} \\
+\Rightarrow& \frac{nr(1-\theta)}{\theta} = \sum_{i=1}^n x_i \\
+\Rightarrow& \frac{nr}{\theta} =  \sum_{i=1}^n x_i + nr \\
+\Rightarrow& \hat{\theta}_{MLE} = \frac{nr}{\sum_{i=1}^n x_i + nr} \\
+\Rightarrow& \hat{\theta}_{MLE} = \frac{r}{\bar{x} + r} \\
+\end{align*}
+On calcule ensuite le maximum de vraisemblance avec notre unique donnée $x = 5$
+\[ \hat{\theta}_{MLE} = \frac{r}{\bar{x} + r} = \frac{2}{5 + 2} = \frac{2}{7} \]
 
 
 ### b) Présentation graphique de la loi beta a priori
+On choisi comme loi à priori la loi beta avec $\alpha = 2$ et $\beta = 2$. On prend la loi beta puisque sont domaine respecte le domaine de notre estimateur, soit $\theta \in [0, 1]$. La figure \ref{fig:beta} permet d'observer la moyenne de la distribution(point rouge) qui est égal à $0.5$. L'équation \ref{EQ:esp beta} permet de confirmer cette valeur. 
+\begin{align*}
+\theta \sim \text{Beta}(\alpha = 2, \beta = 2)  \\
+E[\theta] = \frac{\alpha}{\alpha + \beta} = 0.5 \tag{3.1}
+\label{EQ:esp beta}
+\end{align*}
+```{r figs,echo = FALSE,fig.cap="\\label{fig:beta}Densité d'une loi beta($\\alpha = 2, \\beta = 2)$", fig.width=4, fig.height=3}
+ggplot(data.frame(x=c(0, 1)),aes(x)) +
+    stat_function(fun=dbeta, args = list(2,2))+
+    #ggtitle(expression(paste("Densité d'un loi beta(", alpha,"= 2,",beta,"= 2)")))+
+    xlab(expression(theta))+
+    ylab("Densité")+
+    geom_point(aes(x=0.5, y=1.5), colour="red")
+    #geom_vline(xintercept = 0.5, color = "blue")
+```
+
+
 
 ### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes 
-
-
-
+On détermine la loi à posteriori, pour ensuite trouver l'estimateur de Bayes pour notre $\theta$. Puisque notre loi a priori est une Beta, la loi à posteriori devrait elle aussi suivre une Beta avec $\alpha'$ et $\beta'$.
 \begin{align*}
-f_{x_i}(x_i) &= \int_0^1 \binom{r + x_i - 1}{x_i} \theta^r (1 - \theta)^{x_i} \frac{\theta^{\alpha - 1} (1 - \theta)^{\beta - 1}}{B(\alpha, \beta)} d\theta \\
-             &= \binom{r + x_i - 1}{x_i} \frac{B(\alpha + r, \beta + x_i)}{B(\alpha, \beta)} \int_0^1 \frac{\theta^{\alpha + r - 1} (1 - \theta)^{\beta + x_i - 1}}{B(\alpha + r, \beta + x_i)} d\theta \\
-             &= \frac{\Gamma(r + x_i)}{\Gamma(r) x_i!} \frac{\Gamma(\alpha + r) \Gamma(\beta + x_i)}{\Gamma(\alpha + \beta + r + x_i)} \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)} \\
-             &= \frac{\Gamma(2 + x_i)}{\Gamma(2) x_i!} \frac{\Gamma(2 + 2) \Gamma(2 + x_i)}{\Gamma(2 + 2 + 2 + x_i)} \frac{\Gamma(2 + 2)}{\Gamma(2) \Gamma(2)} \\
-             &= \frac{\Gamma(2 + x_i)}{x_i!} \frac{\Gamma(4) \Gamma(2 + x_i)}{\Gamma(6 + x_i)} \Gamma(4) \\
-             &= \frac{36 [\Gamma(2 + x_i)]^2}{x_i! \Gamma(6 + x_i)},\: x_i = 0,1,2,... 
+f(\theta|x_1,...,x_n) &= \frac{f(\theta) \cdot f(\theta|x_1,...,x_n)}{\int f(\theta) \cdot f(\theta|x_1,...,x_n) d\theta} \\
+&= c(x) \cdot \theta^{\alpha-1}(1-\theta)^{\beta-1} \theta^r (1 - \theta)^{x_1}...\: \theta^r (1 - \theta)^{x_n}\\
+&= c(x) \cdot \theta^{\alpha + nr - 1}(1-\theta)^{\beta +\left( \sum\limits_{i=1}^n x_i \right) - 1} \\
+&\sim \text{Beta}(\alpha' = \alpha + nr, \beta' = \beta + \sum_{i=1}^n x_i) \tag{3.2}
+\label{EQ:posteriorie}
+\end{align*}
+où c(x) est une constante qui fait que la densité intégrée sur tout sont domaine égal à 1. On peut ensuite trouver l'estimateur de Bayes pour notre $\theta$, toujours en utilisant notre unique donnée $x = 5$.
+\begin{align*}
+\hat{\theta}_{B} &= \int_0^1 \theta f(\theta|x) d\theta  \\
+&= \frac{\alpha'}{\alpha' + \beta'} \\
+&= \frac{\alpha + nr}{\alpha + nr + \beta + \sum_{i=1}^n} \\
+&= \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n}  \tag{3.3} \label{EQ:bayes}\\
+&= \frac{2 + (1)2}{2 + (1)2 + 2 + 5} \\
+&= \frac{4}{11}
+\end{align*}
+L'estimateur de Bayes estime une probabilité plus grande pour notre $\theta$ que l'estimateur de vraisemblance. Puisque nous avons une seul donnée, l'estimateur de maxmimum de vraisemblance possède une plus grande variance que l'estimateur de Bayes. Par contre, Bayes détermine un estimateur biaiser. En utilisant la représentation en \ref{EQ:bayes} et 
+en prenant $n \rightarrow \infty$, il est possible de montrer que l'estimateur de Bayes tend vers l'estimateur du maximum de vraisremblance. Il en déduit donc que l'estimateur de Bayes est préférable pour de petit échantillion de donnés, alors que celui du maximum de vraisemblance sera plus précis pour les grands échantillions.
+\begin{align*}
+\lim_{n \to \infty} \hat{\theta}_B &=
+\frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n x} \\
+&= \lim_{n \to \infty} \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x} + \lim_{n \to \infty} \frac{rn}{n(\frac{\alpha}{n}+r+\frac{\beta}{n}+\bar{x})} \\
+&= 0 + \lim_{n \to \infty} \frac{r}{\frac{\alpha}{n}+r+\frac{\beta}{n}+\bar{x}} \\
+&= \frac{r}{r+\bar{x}} = \hat{\theta}_{MLE}
 \end{align*}
 
 
 
 ### d) Approximation de l'estimateur de Bayes par simulation
-
-```{r}
-m <- 10000
-f <- function(x){
-    36 * (gamma(2 + x))^2 / factorial(x) / gamma(6 + x)
-}
-
-
-valeur <- sapply(0:100, function(i) f(i))
-cumsum(valeur)
+```{r, echo = FALSE, eval = TRUE, results = 'asis', message = FALSE, warning = FALSE}
+set.seed(4545)
+nsim <- 500000
+simul_posterorie <- rbeta(nsim, 4, 7)
+simul_bayes <- mean(simul_posterorie)
 ```
+On simule notre estimateur de Bayes pour le comparer avec la valeur théorique calulée en C. Pour ce faire on effectue $m = 500 000$ simulation de la loi à postériorie. Comme calculée à l'équation \ref{EQ:posteriorie}, cette loi suit aussi un beta avec $\alpha = 4$ et $\beta = 7$. L'estimateur de Bayes simulées consiste alors à la moyenne de ses simulations. Avec cette méthode et ce nombre important de simulations, nous obtenons $\hat{\theta}_B =$ `r simul_bayes`. Le résultat obtenue est différent seulement pour la $5^e$ décimal, ce qui est très précis. Pour plus de précision, il aurait été possible d'augmenter le nombre de simulation, mais celà aurais requis plus de puissance temps et et potentiellement plus de puissance machine pour une énorme quantité de simulations.
+
 
 
 \newpage
@@ -885,9 +919,26 @@ grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
 
 # Question 3
 ### a) Estimation du paramètre $\theta$
+Aucun code n'a été utilisé pour cette section.
 
 ### b) Présentation graphique de la loi beta a priori
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Création du graphique de la loi beta
+ggplot(data.frame(x=c(0, 1)),aes(x)) +
+    stat_function(fun=dbeta, args = list(2,2))+
+    xlab(expression(theta))+
+    ylab("Densité")+
+    geom_point(aes(x=0.5, y=1.5), colour="red")
+```
 
 ### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes
+Aucun code n'a été utilisé pour cette section.
 
 ### d) Approximation de l'estimateur de Bayes par simulation
+```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
+# Simulation de l'estimation de Bayes
+set.seed(4545)
+nsim <- 500000
+simul_posterorie <- rbeta(nsim, 4, 7)
+simul_bayes <- mean(simul_posterorie)
+```
