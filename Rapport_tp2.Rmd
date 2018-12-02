@@ -3,7 +3,7 @@ output: pdf_document
 ---
 \newpage
 \begin{flushright}
-    Équipe no XX 
+    Équipe 04 
 \end{flushright}
 
 \begin{center}
