@@ -320,7 +320,7 @@ Ecart <- abs((Approx-Prime_2000)/Prime_2000) * 100
 \caption{Valeurs approximées par simulations de la prime stop-loss ayant un déductible de 2000} 
 \end{table}
 
-La valeur de la prime stop-loss calculée en b) pour un déductible de 2000 est de `r round(Prime_2000,4)`. Puis, en regardant les résultats obtenus à l'aide de la simulation, on se rend compte que ceux-ci sont très près de la valeur théorique, soit `r round(Approx[1],4)`, `r round(Approx[2],4)` et `r round(Approx[3],4)` pour 100 000, 500 000 et 1 000 000 simulations respectivement. En effet, les écarts relatifs sont de `r round(Ecart[1],4)`%,`r round(Ecart[2],4)`% et `r round(Ecart[3],4)`%. Par conséquent, l'approximation est très précise et donne sensiblement la même valeur que la valeur théorique lorsqu'un grand nombre de simulations est effectué.
+La valeur de la prime stop-loss calculée en b) pour un déductible de 2000 est de `r round(Prime_2000,4)`. Puis, en regardant les résultats obtenus à l'aide de la simulation, on se rend compte que ceux-ci sont très près de la valeur théorique, soit `r round(Approx[1],4)`, `r round(Approx[2],4)` et `r round(Approx[3],4)` pour 100 000, 500 000 et 1 000 000 simulations respectivement. En effet, les écarts relatifs sont de `r round(Ecart[1],4)`%, `r round(Ecart[2],4)`% et `r round(Ecart[3],4)`%. Par conséquent, l'approximation est très précise et donne sensiblement la même valeur que la valeur théorique lorsqu'un grand nombre de simulations est effectué.
 
 \newpage
 # Question 2
@@ -474,6 +474,7 @@ plot6 <- ggplot(data=value_test_3, aes(x=value_test_3$d, y=value_test_3$Prime)) 
 
 À partir des valeurs de la $\it{Table \ 7}$, il est possible d'observer une baisse du niveau de la prime lorsque le déductible augmente. De plus, en regardant le graphique (A) de la $\it{Figure \ 2}$, il est possible d'observer cette décroissance qui semble à première vue assez linéaire. Toutefois, en regardant le graphique (B) de la $\it{Figure \ 2}$, ayant un plus grand nombre de valeurs de d, on remarque la convexité de la courbe, ce qui signifie que plus d augmente, moins la diminution est significative. Bref, cela fait du sens puisqu'en ajoutant un déductible, la compagnie vient diminuer le montant qu'elle devra verser en prestations. Par conséquent, le niveau de la prime devrait diminuer, et ce, avec un impact de moins en moins significatif, car la valeur ajoutée d'augmenter le déductible pour la compagnie est de moins en moins importante.
 
+\newpage
 ### c) Détermination de l'espérance limitée
 Maintenant, toujours en utilisant les paramètres estimés en a), il faut désormais calculer l'espérance limitée, sans déductible, et ce, pour différentes limites supérieure, soit u = 3000, 3100, ..., 4000. Pour y arriver, il faut utiliser la formule suivante:
 
@@ -540,10 +541,14 @@ plot8 <- ggplot(data=value_test_4, aes(x=value_test_4$u, y=value_test_4$Prime)) 
 library(gridExtra)
 grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
 ```
+\begin{center}
+ Figure 2 : (A) et (B) Représentation graphique de la prime stop-loss en fonction de d. (C) et (D) Représentation graphique de l'espérance limitée en fonction de u. Toutefois, l'étendu des valeurs sur l'axe des abscisses est plus importante pour les graphiques (B) et (D) afin de mieux discerner la tendance.
+\end{center}
+
+
+
+
 \newpage
-
-
-
 # Question 3
 ## Estimateur de Bayes
 ### a) Estimation du paramètre $\theta$
@@ -572,13 +577,13 @@ On calcule ensuite le maximum de vraisemblance avec notre unique donnée $x = 5$
 
 
 ### b) Présentation graphique de la loi beta a priori
-On choisit comme loi à priori la loi beta avec $\alpha = 2$ et $\beta = 2$. On prend la loi beta puisque son domaine respecte le domaine de notre estimateur, soit $\theta \in [0, 1]$. La figure \ref{fig:beta} permet d'observer la moyenne de la distribution (point rouge) qui est égal à $0.5$. L'équation \ref{EQ:esp beta} permet de confirmer cette valeur. 
+On choisit comme loi à priori la loi beta avec $\alpha = 2$ et $\beta = 2$. On prend la loi beta puisque son domaine respecte le domaine de notre estimateur, soit $\theta \in [0, 1]$. La $\it{Figure \ 3}$ permet d'observer la moyenne de la distribution (point rouge) qui est égal à $0.5$. L'équation \ref{EQ:esp beta} permet de confirmer cette valeur. 
 \begin{align*}
 \theta \sim \text{Beta}(\alpha = 2, \beta = 2)  \\
 E[\theta] = \frac{\alpha}{\alpha + \beta} = 0.5 \tag{3.1}
 \label{EQ:esp beta}
 \end{align*}
-```{r figs,echo = FALSE,fig.cap="\\label{fig:beta}Densité d'une loi beta($\\alpha = 2, \\beta = 2)$", fig.width=4, fig.height=3}
+```{r figs,echo = FALSE, fig.width=4, fig.height=3, fig.align="center"}
 ggplot(data.frame(x=c(0, 1)),aes(x)) +
     stat_function(fun=dbeta, args = list(2,2))+
     #ggtitle(expression(paste("Densité d'un loi beta(", alpha,"= 2,",beta,"= 2)")))+
@@ -587,8 +592,9 @@ ggplot(data.frame(x=c(0, 1)),aes(x)) +
     geom_point(aes(x=0.5, y=1.5), colour="red")
     #geom_vline(xintercept = 0.5, color = "blue")
 ```
-
-
+\begin{center}
+    Figure 3 : Densité d'une loi beta$(\alpha = 2, \beta = 2)$
+\end{center}
 
 ### c) Détermination de la loi à posteriori ainsi que la valeur exacte de l’estimateur de Bayes 
 On détermine la loi à posteriori, pour ensuite trouver l'estimateur de Bayes pour notre $\theta$. Puisque notre loi a priori est une Beta, la loi à posteriori devrait elle aussi suivre une Beta avec $\alpha'$ et $\beta'$.
