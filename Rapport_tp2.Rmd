@@ -547,7 +547,7 @@ grid.arrange(plot5, plot6, plot7, plot8, ncol=2, nrow=2)
 # Question 3
 ## Estimateur de Bayes
 ### a) Estimation du paramètre $\theta$
-On trouve le maximum de vraisemblance pour la loi binomial négative avec $r = 2$ pour le paramètre $\theta$, qui représente la probabilité de succès. On suposse de prime à bord qu'il n'y a pas de loi à priori. Le maximum de vraisemblance est alors
+On trouve le maximum de vraisemblance pour la loi binomiale négative avec $r = 2$ et le paramètre $\theta$, qui représente la probabilité de succès. On suposse de prime à bord qu'il n'y a pas de loi à priori. Le maximum de vraisemblance est alors
 défini par:
 \begin{align*}
 L(\theta) &= \prod_{i=1}^n \binom{r + x_1 -1}{x_i} \theta^r (1 - \theta)^{x_i} \\
@@ -561,9 +561,9 @@ l(\theta) &= \ln(\theta^{nr}) + \ln(1 - \theta)^{\sum_{i=1}^n x_i} - \sum_{i=1}^
 On dérive ensuite par rapport à $\theta$ pour trouver l'estimateur
 \begin{align*}
 \frac{dl(\theta)}{d\theta} &= \frac{nr}{\theta} - \frac{\sum_{i=1}^n x_i}{(1-\theta)} = 0 \\
-\Rightarrow& \frac{nr}{\theta} = \frac{\sum_{i=1}^n x_i}{(1-\theta)} \\
-\Rightarrow& \frac{nr(1-\theta)}{\theta} = \sum_{i=1}^n x_i \\
-\Rightarrow& \frac{nr}{\theta} =  \sum_{i=1}^n x_i + nr \\
+\Rightarrow& \frac{nr}{\hat{\theta}} = \frac{\sum_{i=1}^n x_i}{(1-\hat{\theta})} \\
+\Rightarrow& \frac{nr(1-\hat{\theta})}{\hat{\theta}} = \sum_{i=1}^n x_i \\
+\Rightarrow& \frac{nr}{\hat{\theta}} =  \sum_{i=1}^n x_i + nr \\
 \Rightarrow& \hat{\theta}_{MLE} = \frac{nr}{\sum_{i=1}^n x_i + nr} \\
 \Rightarrow& \hat{\theta}_{MLE} = \frac{r}{\bar{x} + r} \\
 \end{align*}
@@ -572,7 +572,7 @@ On calcule ensuite le maximum de vraisemblance avec notre unique donnée $x = 5$
 
 
 ### b) Présentation graphique de la loi beta a priori
-On choisi comme loi à priori la loi beta avec $\alpha = 2$ et $\beta = 2$. On prend la loi beta puisque sont domaine respecte le domaine de notre estimateur, soit $\theta \in [0, 1]$. La figure \ref{fig:beta} permet d'observer la moyenne de la distribution(point rouge) qui est égal à $0.5$. L'équation \ref{EQ:esp beta} permet de confirmer cette valeur. 
+On choisit comme loi à priori la loi beta avec $\alpha = 2$ et $\beta = 2$. On prend la loi beta puisque son domaine respecte le domaine de notre estimateur, soit $\theta \in [0, 1]$. La figure \ref{fig:beta} permet d'observer la moyenne de la distribution (point rouge) qui est égal à $0.5$. L'équation \ref{EQ:esp beta} permet de confirmer cette valeur. 
 \begin{align*}
 \theta \sim \text{Beta}(\alpha = 2, \beta = 2)  \\
 E[\theta] = \frac{\alpha}{\alpha + \beta} = 0.5 \tag{3.1}
@@ -590,7 +590,7 @@ ggplot(data.frame(x=c(0, 1)),aes(x)) +
 
 
 
-### c) Détermination de la loi a posteriori ainsi que la valeur exacte de l’estimateur de Bayes 
+### c) Détermination de la loi à posteriori ainsi que la valeur exacte de l’estimateur de Bayes 
 On détermine la loi à posteriori, pour ensuite trouver l'estimateur de Bayes pour notre $\theta$. Puisque notre loi a priori est une Beta, la loi à posteriori devrait elle aussi suivre une Beta avec $\alpha'$ et $\beta'$.
 \begin{align*}
 f(\theta|x_1,...,x_n) &= \frac{f(\theta) \cdot f(\theta|x_1,...,x_n)}{\int f(\theta) \cdot f(\theta|x_1,...,x_n) d\theta} \\
@@ -599,21 +599,21 @@ f(\theta|x_1,...,x_n) &= \frac{f(\theta) \cdot f(\theta|x_1,...,x_n)}{\int f(\th
 &\sim \text{Beta}(\alpha' = \alpha + nr, \beta' = \beta + \sum_{i=1}^n x_i) \tag{3.2}
 \label{EQ:posteriorie}
 \end{align*}
-où c(x) est une constante qui fait que la densité intégrée sur tout sont domaine égal à 1. On peut ensuite trouver l'estimateur de Bayes pour notre $\theta$, toujours en utilisant notre unique donnée $x = 5$.
+où c(x) est une constante faisant en sorte que la densité intégrée sur tout son domaine égale à 1. Ensuite, on peut trouver l'estimateur de Bayes pour notre $\theta$, et ce, en utilisant notre unique donnée $x = 5$.
 \begin{align*}
 \hat{\theta}_{B} &= \int_0^1 \theta f(\theta|x) d\theta  \\
 &= \frac{\alpha'}{\alpha' + \beta'} \\
-&= \frac{\alpha + nr}{\alpha + nr + \beta + \sum_{i=1}^n} \\
-&= \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n}  \tag{3.3} \label{EQ:bayes}\\
+&= \frac{\alpha + nr}{\alpha + nr + \beta + \sum_{i=1}^n x_i} \\
+&= \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x_i} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n x_i}  \tag{3.3} \label{EQ:bayes}\\
 &= \frac{2 + (1)2}{2 + (1)2 + 2 + 5} \\
 &= \frac{4}{11}
 \end{align*}
-L'estimateur de Bayes estime une probabilité plus grande pour notre $\theta$ que l'estimateur de vraisemblance. Puisque nous avons une seul donnée, l'estimateur de maxmimum de vraisemblance possède une plus grande variance que l'estimateur de Bayes. Par contre, Bayes détermine un estimateur biaiser. En utilisant la représentation en \ref{EQ:bayes} et 
-en prenant $n \rightarrow \infty$, il est possible de montrer que l'estimateur de Bayes tend vers l'estimateur du maximum de vraisremblance. Il en déduit donc que l'estimateur de Bayes est préférable pour de petit échantillion de donnés, alors que celui du maximum de vraisemblance sera plus précis pour les grands échantillions.
+L'estimateur de Bayes estime une probabilité plus grande pour notre $\theta$ que l'estimateur de vraisemblance. Puisque nous avons une seule donnée, l'estimateur du maximum de vraisemblance possède une plus grande variance que l'estimateur de Bayes. Par contre, Bayes détermine un estimateur biaisé. En utilisant la représentation en \ref{EQ:bayes} et 
+en prenant $n \rightarrow \infty$, il est possible de montrer que l'estimateur de Bayes tend vers l'estimateur du maximum de vraisemblance. On en déduit donc que l'estimateur de Bayes est préférable pour un petit échantillon de données, alors que celui du maximum de vraisemblance sera plus précis pour un grand échantillon.
 \begin{align*}
 \lim_{n \to \infty} \hat{\theta}_B &=
-\frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n x} \\
-&= \lim_{n \to \infty} \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x} + \lim_{n \to \infty} \frac{rn}{n(\frac{\alpha}{n}+r+\frac{\beta}{n}+\bar{x})} \\
+\frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x_i} + \frac{rn}{\alpha+nr+\beta+\sum_{i=1}^n x_i} \\
+&= \lim_{n \to \infty} \frac{\alpha}{\alpha+nr+\beta+\sum_{i=1}^n x_i} + \lim_{n \to \infty} \frac{rn}{n(\frac{\alpha}{n}+r+\frac{\beta}{n}+\bar{x})} \\
 &= 0 + \lim_{n \to \infty} \frac{r}{\frac{\alpha}{n}+r+\frac{\beta}{n}+\bar{x}} \\
 &= \frac{r}{r+\bar{x}} = \hat{\theta}_{MLE}
 \end{align*}
@@ -627,7 +627,7 @@ nsim <- 500000
 simul_posterorie <- rbeta(nsim, 4, 7)
 simul_bayes <- mean(simul_posterorie)
 ```
-On simule notre estimateur de Bayes pour le comparer avec la valeur théorique calulée en C. Pour ce faire on effectue $m = 500 000$ simulation de la loi à postériorie. Comme calculée à l'équation \ref{EQ:posteriorie}, cette loi suit aussi un beta avec $\alpha = 4$ et $\beta = 7$. L'estimateur de Bayes simulées consiste alors à la moyenne de ses simulations. Avec cette méthode et ce nombre important de simulations, nous obtenons $\hat{\theta}_B =$ `r simul_bayes`. Le résultat obtenue est différent seulement pour la $5^e$ décimal, ce qui est très précis. Pour plus de précision, il aurait été possible d'augmenter le nombre de simulation, mais celà aurais requis plus de puissance temps et et potentiellement plus de puissance machine pour une énorme quantité de simulations.
+On simule notre estimateur de Bayes pour le comparer avec la valeur théorique calculée en c). Pour ce faire on effectue $m = 500 000$ simulations de la loi à posteriori. Comme il a été démontré à l'équation \ref{EQ:posteriorie}, cette loi suit aussi une beta avec $\alpha = 4$ et $\beta = 7$. L'estimateur de Bayes simulé consiste alors à la moyenne de ces simulations. Avec cette méthode et ce nombre important de simulations, nous obtenons $\hat{\theta}_B =$ `r simul_bayes`. Le résultat obtenu est différent seulement à partir de la $5^e$ décimal, ce qui est très précis. Pour plus de précision, il aurait été possible d'augmenter le nombre de simulations, mais cela aurait requis plus de temps et potentiellement plus de puissance machine pour une énorme quantité de simulations.
 
 
 
@@ -936,7 +936,7 @@ Aucun code n'a été utilisé pour cette section.
 
 ### d) Approximation de l'estimateur de Bayes par simulation
 ```{R, echo = TRUE, eval = FALSE, results = 'asis', message = FALSE, warning = FALSE}
-# Simulation de l'estimation de Bayes
+# Simulation de l'estimateur de Bayes
 set.seed(4545)
 nsim <- 500000
 simul_posterorie <- rbeta(nsim, 4, 7)
